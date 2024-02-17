@@ -17,7 +17,7 @@ sidebar.pack(side=tk.LEFT, fill=tk.Y)
 # path="Images/Timetable.jpg"
 # img = ImageTk.PhotoImage(Image.open(path))
 
-timetable_icon = tk.PhotoImage(file=r'C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\Timetable.png')
+timetable_icon = tk.PhotoImage(file=r'C:\Users\272241\Python\timetableGen\Images\Timetable.png')
 # instructions_icon = tk.PhotoImage(file="instructions.png")
 # teachers_icon = tk.PhotoImage(file="teachers.png")
 # activity_icon = tk.PhotoImage(file="activity.png")
