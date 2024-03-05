@@ -17,11 +17,11 @@ sidebar.pack(side=LEFT, fill=Y)
 
 # Create a list of menu items for the sidebar
 menu_items = [
-    ("TIMETABLE", PhotoImage(file="Images/home_icon.png").subsample(2)),
-    ("LECTURES", PhotoImage(file="Images/lecturer_icon.png").subsample(2)),
-    ("TEACHERS", PhotoImage(file="Images/teacher_icon.png").subsample(2)),
-    ("USER", PhotoImage(file="Images/user_icon.png").subsample(2)),
-    ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon.png").subsample(2))
+    ("TIMETABLE", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\home_icon.png").subsample(2)),
+    ("LECTURES", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\lecturer_icon.png").subsample(2)),
+    ("TEACHERS", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\teacher_icon.png").subsample(2)),
+    ("USER", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\user_icon.png").subsample(2)),
+    ("LATEST ACTIVITY", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\activity_icon.png").subsample(2))
 ]
 
 # Create a list of buttons for the sidebar
@@ -50,7 +50,7 @@ title = Label(topbar, text="TIMETABLE", font=("Arial", 20, "bold"), bg="#C1BBEB"
 title.pack(side=LEFT, padx=20, pady=10)
 
 # Create a label for the user icon
-user_icon_image = PhotoImage(file="Images/settings_icon.png").subsample(2)
+user_icon_image = PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\settings_icon.png").subsample(2)
 user_icon = Label(topbar, image=user_icon_image, bg="#C1BBEB")
 user_icon.pack(side=RIGHT, padx=10, pady=10)
 

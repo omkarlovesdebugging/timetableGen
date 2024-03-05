@@ -121,3 +121,10 @@ view_more_btn.pack()
 
 # Starting the main loop
 window.mainloop()
+
+
+
+
+
+
+#C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\activity_icon.png
