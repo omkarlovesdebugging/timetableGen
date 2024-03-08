@@ -17,11 +17,11 @@ sidebar.pack(side=LEFT, fill=Y)
 
 # Create a list of menu items for the sidebar
 menu_items = [
-    ("TIMETABLE", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\home_icon.png").subsample(2)),
-    ("LECTURES", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\lecturer_icon.png").subsample(2)),
-    ("TEACHERS", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\teacher_icon.png").subsample(2)),
-    ("USER", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\user_icon.png").subsample(2)),
-    ("LATEST ACTIVITY", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\activity_icon.png").subsample(2))
+    ("TIMETABLE", PhotoImage(file="Images/home_icon.png").subsample(2)),
+    ("LECTURES", PhotoImage(file="Images/lecturer_icon.png").subsample(2)),
+    ("TEACHERS", PhotoImage(file="Images/teacher_icon.png").subsample(2)),
+    ("USER", PhotoImage(file="Images/user_icon.png").subsample(2)),
+    ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon.png").subsample(2))
 ]
 
 # Create a list of buttons for the sidebar

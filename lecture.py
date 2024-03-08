@@ -12,7 +12,7 @@ sidebar = tk.Frame(window, width=300, height=600, bg="#4a148c")
 sidebar.pack(side=tk.LEFT, fill=tk.Y)
 
 # Creating the sidebar icons
-timetable_icon = tk.PhotoImage(file=r'C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\Timetable.png')
+timetable_icon = tk.PhotoImage(file='Images/Timetable.png')
 timetable_icon = timetable_icon.subsample(2, 2)
 
 # Creating the sidebar buttons
