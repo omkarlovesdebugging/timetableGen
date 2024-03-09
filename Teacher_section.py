@@ -21,11 +21,11 @@ sidebar.pack(side=LEFT, fill=Y)
 
 # Create a list of menu items for the sidebar
 menu_items = [
-    ("TIMETABLE", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\home_icon.png").subsample(2)),
-    ("LECTURES", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\lecturer_icon.png").subsample(2)),
-    ("TEACHERS", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\teacher_icon.png").subsample(2)),
-    ("USER", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\user_icon.png").subsample(2)),
-    ("LATEST ACTIVITY", PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\activity_icon.png").subsample(2))
+    ("TIMETABLE", PhotoImage(file="Images/home_icon(1).png").subsample(2)),
+    ("LECTURES", PhotoImage(file="Images/lecturer_icon(1).png").subsample(2)),
+    ("TEACHERS", PhotoImage(file="Images/teacher_icon.png").subsample(2)),
+    ("USER", PhotoImage(file="Images/user_icon(1).png").subsample(2)),
+    ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
 # timetable_icon =   PhotoImage(file=r'C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\Timetable.png')
@@ -51,8 +51,8 @@ menu_items = [
 buttons = []
 
 for item in menu_items:
-    if (item[0] == "TIMETABLE"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w")
+    if (item[0] == "TEACHERS"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",)
         button.pack(anchor="w") 
     # Create a button with text and icon
     else:
