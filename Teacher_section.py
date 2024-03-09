@@ -1,4 +1,5 @@
 # Import tkinter and ttk modules
+import subprocess
 from tkinter import *
 from tkinter import ttk
 
@@ -48,14 +49,36 @@ menu_items = [
 # activity_btn.place(x=50, y=350)
 # Loop through the menu items and create buttons
 
+def lecture_page() :
+    print("Navigating to lecture page...") #Debug Message
+    print("Lecture Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","lecture.py"])
+
+
+def timetable_page() :
+    print("Navigating to timetable page...") #Debug Message
+    print("Timetable Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","timetable.py"])
+
 buttons = []
 
 for item in menu_items:
     if (item[0] == "TEACHERS"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",)
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w")
         button.pack(anchor="w") 
     # Create a button with text and icon
-    else:
+    elif (item[0]=="LECTURES"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
+        button.pack(anchor="w") 
+    elif (item[0]=="TIMETABLE"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
+        button.pack(anchor="w") 
+    elif (item[0]=="USER"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
+        button.pack(anchor="w") 
+    elif (item[0]=="LATEST ACTIVITY"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
         button.pack(anchor="w") 
     # Add the button to the list
@@ -72,7 +95,7 @@ title = Label(topbar, text="TIMETABLE", font=("Arial", 20, "bold"), bg="#C1BBEB"
 title.pack(side=LEFT, padx=20, pady=10)
 
 # Create a label for the user icon
-user_icon_image = PhotoImage(file=r"C:\Users\ghola\OneDrive\Desktop\Mini project\timetableGen\Images\settings_icon.png").subsample(2)
+user_icon_image = PhotoImage(file="Images/settings_icon.png").subsample(2)
 user_icon = Label(topbar, image=user_icon_image, bg="#C1BBEB")
 user_icon.pack(side=RIGHT, padx=10, pady=10)
 
@@ -163,6 +186,9 @@ tree.insert("", "end", values=("4", "Batman", "7856", "batmobile@gotham.vc.ac.in
 # Creating the view more button
 view_more_btn =   Button(list_section, text="View More", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
 view_more_btn.pack()
+
+
+
 
 # Starting the main loop
 root.mainloop()
