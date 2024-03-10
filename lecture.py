@@ -21,11 +21,11 @@ menu_items = [
 ]
 
 
-def teacher_section() :
+def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
     print("Lecture Page opened")#Debug Message
     root.destroy()
-    subprocess.run(["python","Teacher_section.py"])
+    subprocess.run(["python","lecture.py"])
 
 
 def timetable_page() :
@@ -34,11 +34,29 @@ def timetable_page() :
     root.destroy()
     subprocess.run(["python","timetable.py"])
 
+def teacher_section() :
+    print("Navigating to teacher_section page...") #Debug Message
+    print("Teacher Section Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","Teacher_section.py"])
+
+def USER() :
+    print("Navigating to lecture page...") #Debug Message
+    print("Lecture Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","user.py"])
+
+def activity() :
+    print("Navigating to lecture page...") #Debug Message
+    print("Lecture Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","notifications.py"])
+
 buttons=[]
 
 for item in menu_items:
     if (item[0] == "LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w")
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
         button.pack(anchor="w") 
     # Create a button with text and icon
     elif (item[0]=="TEACHERS"):
@@ -48,10 +66,10 @@ for item in menu_items:
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
         button.pack(anchor="w") 
     elif (item[0]=="USER"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=USER)
         button.pack(anchor="w") 
     elif (item[0]=="LATEST ACTIVITY"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=activity)
         button.pack(anchor="w") 
     # Add the button to the list
     buttons.append(button)

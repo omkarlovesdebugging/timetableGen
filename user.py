@@ -1,3 +1,4 @@
+import subprocess
 from tkinter import *
 from tkinter import ttk
 import time
@@ -17,27 +18,65 @@ sidebar.pack(side=LEFT, fill=Y)
 
 # Create a list of menu items for the sidebar
 menu_items = [
-    ("TIMETABLE", PhotoImage(file="Images/home_icon.png").subsample(2)),
-    ("LECTURES", PhotoImage(file="Images/lecturer_icon.png").subsample(2)),
-    ("TEACHERS", PhotoImage(file="Images/teacher_icon.png").subsample(2)),
+    ("TIMETABLE", PhotoImage(file="Images/home_icon(1).png").subsample(2)),
+    ("LECTURES", PhotoImage(file="Images/lecturer_icon(1).png").subsample(2)),
+    ("TEACHERS", PhotoImage(file="Images/teacher_icon(1).png").subsample(2)),
     ("USER", PhotoImage(file="Images/user_icon.png").subsample(2)),
-    ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon.png").subsample(2))
+    ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
 # Create a list of buttons for the sidebar
 buttons = []
 
+def lecture_page() :
+    print("Navigating to lecture page...") #Debug Message
+    print("Lecture Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","lecture.py"])
+
+
+def timetable_page() :
+    print("Navigating to timetable page...") #Debug Message
+    print("Timetable Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","timetable.py"])
+
+def teacher_section() :
+    print("Navigating to teacher_section page...") #Debug Message
+    print("Teacher Section Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","Teacher_section.py"])
+
+def USER() :
+    print("Navigating to lecture page...") #Debug Message
+    print("Lecture Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","user.py"])
+
+def activity() :
+    print("Navigating to lecture page...") #Debug Message
+    print("Lecture Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","notifications.py"])
+
 # Loop through the menu items and create buttons
 for item in menu_items:
-    if (item[0] == "TIMETABLE"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0,
-                        padx=20, pady=10, anchor="w")
-        button.pack(anchor="w")
+    if (item[0] == "USER"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=USER)
+        button.pack(anchor="w") 
     # Create a button with text and icon
-    else:
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0,
-                        padx=20, pady=10, anchor="w")
-        button.pack(anchor="w")
+    elif (item[0]=="LECTURES"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
+        button.pack(anchor="w") 
+    elif (item[0]=="TIMETABLE"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
+        button.pack(anchor="w") 
+    elif (item[0]=="LATEST ACTIVITY"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=activity)
+        button.pack(anchor="w") 
+    elif (item[0]=="TEACHERS"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
+        button.pack(anchor="w") 
     # Add the button to the list
     buttons.append(button)
     # Pack the button to the sidebar
