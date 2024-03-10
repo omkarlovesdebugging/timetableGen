@@ -94,7 +94,7 @@ user_name.pack(side=RIGHT, pady=10)
 # activity_btn.place(x=50, y=350)
 
 # Creating the right frame
-right_frame =  Frame(root, width=900, height=600, bg="#ffffff")
+right_frame =  Frame(root, width=600, height=550, bg="#C1BBEB")
 right_frame.pack(side= RIGHT, fill= BOTH, expand=True)
 
 # Creating the add new teacher or update details section
