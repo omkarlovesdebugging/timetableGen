@@ -1,1 +1,1 @@
-TIMETABLE
+subject_index > len(subjects)

@@ -91,7 +91,7 @@ topbar = Frame(root, bg="#C1BBEB", width=600, height=50)
 topbar.pack(side=TOP, fill=X)
 
 # Create a label for the title
-title = Label(topbar, text="TIMETABLE", font=("Arial", 20, "bold"), bg="#C1BBEB", fg="#4a148c")
+title = Label(topbar, text="TEACHERS", font=("Arial", 20, "bold"), bg="#C1BBEB", fg="#4a148c")
 title.pack(side=LEFT, padx=20, pady=10)
 
 # Create a label for the user icon
