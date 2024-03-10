@@ -1,21 +1,21 @@
-import tkinter as tk
+import subprocess
+from tkinter import *
 from tkinter import ttk
 
 # Creating the main window
-root = tk.Tk()
-root.title("Timetable Management System")
-root.geometry("1920x940")
-root.configure(bg="#4a148c")
+root =  Tk()
+root.title("Timetable")
+root.geometry("800x600+100+100")
 
 # Creating the left sidebar
-sidebar = tk.Frame(root, width=300, height=600, bg="#4a148c")
-sidebar.pack(side=tk.LEFT, fill=tk.Y)
+sidebar =  Frame(root, width=200, height=600, bg="#4a148c")
+sidebar.pack(side= LEFT, fill= Y)
 
 # Create a list of menu items for the sidebar
 menu_items = [
     ("TIMETABLE", PhotoImage(file="Images/home_icon(1).png").subsample(2)),
-    ("LECTURES", PhotoImage(file="Images/lecturer_icon(1).png").subsample(2)),
-    ("TEACHERS", PhotoImage(file="Images/teacher_icon.png").subsample(2)),
+    ("LECTURES", PhotoImage(file="Images/lecture_icon.png").subsample(2)),
+    ("TEACHERS", PhotoImage(file="Images/teacher_icon(1).png").subsample(2)),
     ("USER", PhotoImage(file="Images/user_icon(1).png").subsample(2)),
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
@@ -34,24 +34,25 @@ def timetable_page() :
     root.destroy()
     subprocess.run(["python","timetable.py"])
 
+buttons=[]
 
-    for item in menu_items:
-        if (item[0] == "TEACHERS"):
-            button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w")
-            button.pack(anchor="w") 
+for item in menu_items:
+    if (item[0] == "LECTURES"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w")
+        button.pack(anchor="w") 
     # Create a button with text and icon
-        elif (item[0]=="LECTURES"):
-            button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
-            button.pack(anchor="w") 
-        elif (item[0]=="TIMETABLE"):
-            button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
-            button.pack(anchor="w") 
-        elif (item[0]=="USER"):
-            button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
-            button.pack(anchor="w") 
-        elif (item[0]=="LATEST ACTIVITY"):
-            button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
-            button.pack(anchor="w") 
+    elif (item[0]=="TEACHERS"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
+        button.pack(anchor="w") 
+    elif (item[0]=="TIMETABLE"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
+        button.pack(anchor="w") 
+    elif (item[0]=="USER"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
+        button.pack(anchor="w") 
+    elif (item[0]=="LATEST ACTIVITY"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w")
+        button.pack(anchor="w") 
     # Add the button to the list
     buttons.append(button)
     # Pack the button to the sidebar
@@ -76,71 +77,71 @@ user_name = Label(topbar, text="Vineeta M.", font=("Arial", 16), bg="#C1BBEB", f
 user_name.pack(side=RIGHT, pady=10)
 
 # Creating the sidebar icons
-# timetable_icon = tk.PhotoImage(file='Images/Timetable.png')
+# timetable_icon =  PhotoImage(file='Images/Timetable.png')
 # timetable_icon = timetable_icon.subsample(2, 2)
 
 # Creating the sidebar buttons
-# timetable_btn = tk.Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
+# timetable_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
 # timetable_btn.place(x=50, y=50)
 
-# instructions_btn = tk.Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
+# instructions_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
 # instructions_btn.place(x=50, y=150)
 
-# teachers_btn = tk.Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0, relief=tk.SUNKEN)
+# teachers_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0, relief= SUNKEN)
 # teachers_btn.place(x=50, y=250)
 
-# activity_btn = tk.Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
+# activity_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
 # activity_btn.place(x=50, y=350)
 
 # Creating the right frame
-right_frame = tk.Frame(root, width=900, height=600, bg="#ffffff")
-right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+right_frame =  Frame(root, width=900, height=600, bg="#ffffff")
+right_frame.pack(side= RIGHT, fill= BOTH, expand=True)
 
 # Creating the add new teacher or update details section
-add_section = tk.LabelFrame(right_frame, text="Lecture Details", font=("Arial", 14), fg="#ffffff", bg="#4a148c",
+add_section =  LabelFrame(right_frame, text="Lecture Details", font=("Arial", 14), fg="#ffffff", bg="#4a148c",
                              width=705, height=790)
 add_section.grid(row=0, column=0, padx=25, pady=25)
 
 # Creating the personal details section
-personal_section = tk.LabelFrame(add_section, font=("Arial", 12), fg="#4a148c", bg="#ffffff", width=500,
+personal_section =  LabelFrame(add_section, font=("Arial", 12), fg="#4a148c", bg="#ffffff", width=500,
                                  height=250)
 personal_section.grid(row=0, column=0, padx=10, pady=10)
 
 # Creating the labels and entries for the personal details
-teacher_name_label = tk.Label(personal_section, text="Teacher Name*", font=("Arial", 10), fg="#4a148c",
+teacher_name_label =  Label(personal_section, text="Teacher Name*", font=("Arial", 10), fg="#4a148c",
                             bg="#ffffff")
-teacher_name_label.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W)
+teacher_name_label.grid(row=0, column=0, padx=10, pady=10, sticky= W)
 
-teacher_name_entry = tk.Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
+teacher_name_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
 teacher_name_entry.grid(row=1, column=0, padx=10, pady=10)
 
 
 
-subject_label = tk.Label(personal_section, text="Subject*", font=("Arial", 10), fg="#4a148c",
+subject_label =  Label(personal_section, text="Subject*", font=("Arial", 10), fg="#4a148c",
                          bg="#ffffff")
-subject_label.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
+subject_label.grid(row=2, column=0, padx=10, pady=10, sticky= W)
 
-subject_entry = tk.Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
+subject_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
 subject_entry.grid(row=3, column=0, padx=10, pady=10)
 
-subject_code_label = tk.Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c",
+subject_code_label =  Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c",
                               bg="#ffffff")
-subject_code_label.grid(row=4, column=0, padx=10, pady=10, sticky=tk.W)
+subject_code_label.grid(row=4, column=0, padx=10, pady=10, sticky= W)
 
-subject_code_entry = tk.Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
+subject_code_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
 subject_code_entry.grid(row=5, column=0, padx=10, pady=10)
 
-email_label = tk.Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c",
+email_label =  Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c",
                        bg="#ffffff")
-email_label.grid(row=6, column=0, padx=10, pady=10, sticky=tk.W)
+email_label.grid(row=6, column=0, padx=10, pady=10, sticky= W)
 
-email_entry = tk.Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
+email_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
 email_entry.grid(row=7, column=0, padx=10, pady=10)
 
 
-room_no_label = tk.Label(personal_section, text="Room No*", font=("Arial", 10), fg="#4a148c",
+room_no_label =  Label(personal_section, text="Room No*", font=("Arial", 10), fg="#4a148c",
                          bg="#ffffff")
-room_no_label.grid(row=0, column=1, padx=10, pady=10, sticky=tk.W)
+room_no_label.grid(row=0, column=1, padx=10, pady=10, sticky= W)
 
 # Create a list of room numbers
 room_numbers = ["Room 511", "Room 512", "Room 513", "Room 514"]
@@ -150,7 +151,7 @@ combobox_room = ttk.Combobox(personal_section, values=room_numbers, font=("Arial
 combobox_room.grid(row=1, column=1, padx=10, pady=10)
 
 # Creating the save button
-save_btn = tk.Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
+save_btn =  Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
 save_btn.grid(row=14, column=1, padx=10, pady=10)
 
 # Starting the main loop
