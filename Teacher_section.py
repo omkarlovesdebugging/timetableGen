@@ -52,8 +52,16 @@ menu_items = [
 # activity_btn.place(x=50, y=350)
 # Loop through the menu items and create buttons
 
+def save():
+    Name1 = first_name_entry.get()
+    Name2= last_name_entry.get()
+    Name=Name1+Name2
+    Subject=subject_entry.get()
+    Email=email_entry.get()
+
+
 def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
+    print("Navigating to lec)ture page...") #Debug Message
     print("Lecture Page opened")#Debug Message
     root.destroy()
     subprocess.run(["python","lecture.py"])
@@ -156,11 +164,11 @@ subject_label.grid(row=4, column=0, padx=10, pady=10, sticky=  W)
 subject_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
 subject_entry.grid(row=5, column=0, padx=10, pady=10)
 
-subject_code_label =   Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-subject_code_label.grid(row=6, column=0, padx=10, pady=10, sticky=  W)
+# subject_code_label =   Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+# subject_code_label.grid(row=6, column=0, padx=10, pady=10, sticky=  W)
 
-subject_code_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-subject_code_entry.grid(row=7, column=0, padx=10, pady=10)
+# subject_code_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+# subject_code_entry.grid(row=7, column=0, padx=10, pady=10)
 
 email_label =   Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
 email_label.grid(row=8, column=0, padx=10, pady=10, sticky=  W)
@@ -168,14 +176,14 @@ email_label.grid(row=8, column=0, padx=10, pady=10, sticky=  W)
 email_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
 email_entry.grid(row=9, column=0, padx=10, pady=10)
 
-date_of_birth_label =   Label(personal_section, text="Date of Birth*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-date_of_birth_label.grid(row=10, column=0, padx=10, pady=10, sticky=  W)
+# date_of_birth_label =   Label(personal_section, text="Date of Birth*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+# date_of_birth_label.grid(row=10, column=0, padx=10, pady=10, sticky=  W)
 
-date_of_birth_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-date_of_birth_entry.grid(row=11, column=0, padx=10, pady=10)
+# date_of_birth_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+# date_of_birth_entry.grid(row=11, column=0, padx=10, pady=10)
 
 # Creating the save button
-save_btn =   Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
+save_btn =   Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10,command=save)
 save_btn.grid(row=12, column=1, padx=10, pady=10)
 
 # Creating the teacher list section
@@ -183,26 +191,26 @@ list_section =   LabelFrame(right_frame, text="Teacher List", font=("Arial", 14)
 list_section.grid(row=0, column=1, padx=25, pady=25)
 
 # Creating the treeview for the teacher list
-tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUB CODE", "EMAIL"), show="headings", height=5)
+tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUB", "EMAIL"), show="headings", height=5)
 tree.pack(padx=10, pady=10)
 
 # Configuring the treeview columns
 tree.column("S.NO", width=50, anchor=  CENTER)
 tree.column("NAME", width=200, anchor=  CENTER)
-tree.column("SUB CODE", width=100, anchor=  CENTER)
+tree.column("SUB", width=100, anchor=  CENTER)
 tree.column("EMAIL", width=200, anchor=  CENTER)
 
 # Configuring the treeview headings
 tree.heading("S.NO", text="S.NO")
 tree.heading("NAME", text="NAME")
-tree.heading("SUB CODE", text="SUB CODE")
+tree.heading("SUB", text="SUB")
 tree.heading("EMAIL", text="EMAIL")
 
 # Inserting some sample data into the treeview
-tree.insert("", "end", values=("1", "Vineeth M.", "1117", "VineethM@vc.ac.in"))
-tree.insert("", "end", values=("2", "Kung Fu Panda", "2341", "bigpanda@vc.ac.in"))
-tree.insert("", "end", values=("3", "Superman", "2222", "kryptonite@vc.ac.in"))
-tree.insert("", "end", values=("4", "Batman", "7856", "batmobile@gotham.vc.ac.in"))
+tree.insert("", "end", values=("1", "Vineeth M.", "PCPF", "VineethM@vc.ac.in"))
+tree.insert("", "end", values=("2", "Kung Fu Panda", "Animme", "bigpanda@vc.ac.in"))
+tree.insert("", "end", values=("3", "Superman", "Farming", "kryptonite@vc.ac.in"))
+tree.insert("", "end", values=("4", "Batman", "Buisness", "batmobile@gotham.vc.ac.in"))
 
 # Creating the view more button
 view_more_btn =   Button(list_section, text="View More", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
