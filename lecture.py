@@ -1,6 +1,7 @@
 import subprocess
 from tkinter import *
 from tkinter import ttk
+import assets
 
 # Creating the main window
 root =  Tk()
@@ -20,9 +21,15 @@ menu_items = [
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
-def T_name():
+def save_details():
     Teacher_Name=teacher_name_entry.get()
-    pass
+    Subject=subject_entry.get()
+    New = {
+        (Subject,Teacher_Name)
+    }
+    assets.subjects.append(New)
+    print(assets.subjects)
+    
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
@@ -172,7 +179,7 @@ subject_entry.grid(row=3, column=0, padx=10, pady=10)
 # combobox_room.grid(row=1, column=1, padx=10, pady=10)
 
 # Creating the save button
-save_btn =  Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
+save_btn =  Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10,command= save_details)
 save_btn.grid(row=14, column=1, padx=10, pady=10)
 
 # Starting the main loop
