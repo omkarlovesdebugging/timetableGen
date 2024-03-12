@@ -2,6 +2,9 @@
 import subprocess
 from tkinter import *
 from tkinter import ttk
+import sqlite3
+
+
 
 # Create a root window
 root = Tk()
@@ -204,6 +207,7 @@ tree.insert("", "end", values=("4", "Batman", "7856", "batmobile@gotham.vc.ac.in
 # Creating the view more button
 view_more_btn =   Button(list_section, text="View More", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
 view_more_btn.pack()
+
 
 
 

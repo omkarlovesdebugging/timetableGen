@@ -20,6 +20,9 @@ menu_items = [
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
+def T_name():
+    Teacher_Name=teacher_name_entry.get()
+    pass
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
@@ -142,31 +145,31 @@ subject_label.grid(row=2, column=0, padx=10, pady=10, sticky= W)
 subject_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
 subject_entry.grid(row=3, column=0, padx=10, pady=10)
 
-subject_code_label =  Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c",
-                              bg="#ffffff")
-subject_code_label.grid(row=4, column=0, padx=10, pady=10, sticky= W)
+# subject_code_label =  Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c",
+#                               bg="#ffffff")
+# subject_code_label.grid(row=4, column=0, padx=10, pady=10, sticky= W)
 
-subject_code_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
-subject_code_entry.grid(row=5, column=0, padx=10, pady=10)
+# subject_code_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
+# subject_code_entry.grid(row=5, column=0, padx=10, pady=10)
 
-email_label =  Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c",
-                       bg="#ffffff")
-email_label.grid(row=6, column=0, padx=10, pady=10, sticky= W)
+# email_label =  Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c",
+#                        bg="#ffffff")
+# email_label.grid(row=6, column=0, padx=10, pady=10, sticky= W)
 
-email_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
-email_entry.grid(row=7, column=0, padx=10, pady=10)
+# email_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
+# email_entry.grid(row=7, column=0, padx=10, pady=10)
 
 
-room_no_label =  Label(personal_section, text="Room No*", font=("Arial", 10), fg="#4a148c",
-                         bg="#ffffff")
-room_no_label.grid(row=0, column=1, padx=10, pady=10, sticky= W)
+# room_no_label =  Label(personal_section, text="Room No*", font=("Arial", 10), fg="#4a148c",
+#                          bg="#ffffff")
+# room_no_label.grid(row=0, column=1, padx=10, pady=10, sticky= W)
 
-# Create a list of room numbers
-room_numbers = ["Room 511", "Room 512", "Room 513", "Room 514"]
+# # Create a list of room numbers
+# room_numbers = ["Room 511", "Room 512", "Room 513", "Room 514"]
 
-# Create a Combobox widget for room selection
-combobox_room = ttk.Combobox(personal_section, values=room_numbers, font=("Arial", 16), width=33)
-combobox_room.grid(row=1, column=1, padx=10, pady=10)
+# # Create a Combobox widget for room selection
+# combobox_room = ttk.Combobox(personal_section, values=room_numbers, font=("Arial", 16), width=33)
+# combobox_room.grid(row=1, column=1, padx=10, pady=10)
 
 # Creating the save button
 save_btn =  Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
