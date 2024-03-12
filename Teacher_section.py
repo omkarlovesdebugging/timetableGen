@@ -23,6 +23,17 @@ sidebar.pack(side=LEFT, fill=Y)
 # path="Images/Timetable.jpg"
 # img = Image  PhotoImage(Image.open(path))
 
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
+# cursor.execute("""
+#   CREATE TABLE teacher (
+#     teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
+#     first_name VARCHAR(45) NOT NULL,
+#     last_name VARCHAR(45) NOT NULL,
+#     subject_name VARCHAR(45) NOT NULL,
+#     email VARCHAR(45) NOT NULL);
+#   """)
+
 # Create a list of menu items for the sidebar
 menu_items = [
     ("TIMETABLE", PhotoImage(file="Images/home_icon(1).png").subsample(2)),
@@ -51,6 +62,23 @@ menu_items = [
 # activity_btn =   Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
 # activity_btn.place(x=50, y=350)
 # Loop through the menu items and create buttons
+
+def save_details():
+    f = first_name_entry.get()
+    l = last_name_entry.get()
+    s = subject_entry.get()
+    e = email_entry.get()
+
+    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email) VALUES (?, ?, ?, ?)", (f, l, s, e))
+    cursor.execute("SELECT * FROM teacher")
+    print(cursor.fetchall())
+    tree_insert_details(f, l, s, e)
+
+def tree_insert_details(f, l, s, e):
+    cursor.execute("SELECT * FROM teacher")
+    
+    tree.insert("", "end", values=(cursor.fetchone()[0], f+l, s, e))
+
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
@@ -156,11 +184,11 @@ subject_label.grid(row=4, column=0, padx=10, pady=10, sticky=  W)
 subject_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
 subject_entry.grid(row=5, column=0, padx=10, pady=10)
 
-subject_code_label =   Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-subject_code_label.grid(row=6, column=0, padx=10, pady=10, sticky=  W)
+# subject_code_label =   Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+# subject_code_label.grid(row=6, column=0, padx=10, pady=10, sticky=  W)
 
-subject_code_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-subject_code_entry.grid(row=7, column=0, padx=10, pady=10)
+# subject_code_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+# subject_code_entry.grid(row=7, column=0, padx=10, pady=10)
 
 email_label =   Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
 email_label.grid(row=8, column=0, padx=10, pady=10, sticky=  W)
@@ -168,49 +196,35 @@ email_label.grid(row=8, column=0, padx=10, pady=10, sticky=  W)
 email_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
 email_entry.grid(row=9, column=0, padx=10, pady=10)
 
-date_of_birth_label =   Label(personal_section, text="Date of Birth*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-date_of_birth_label.grid(row=10, column=0, padx=10, pady=10, sticky=  W)
+# date_of_birth_label =   Label(personal_section, text="Date of Birth*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+# date_of_birth_label.grid(row=10, column=0, padx=10, pady=10, sticky=  W)
 
-date_of_birth_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-date_of_birth_entry.grid(row=11, column=0, padx=10, pady=10)
+# date_of_birth_entry =   Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+# date_of_birth_entry.grid(row=11, column=0, padx=10, pady=10)
 
 # Creating the save button
-save_btn =   Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
+save_btn =   Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10, command=save_details)
 save_btn.grid(row=12, column=1, padx=10, pady=10)
 
 # Creating the teacher list section
 list_section =   LabelFrame(right_frame, text="Teacher List", font=("Arial", 14), fg="#ffffff", bg="#4a148c", width=550, height=600)
-list_section.grid(row=0, column=1, padx=25, pady=25)
+list_section.grid(row=0, column=1, padx=10, pady=10)
 
 # Creating the treeview for the teacher list
-tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUB CODE", "EMAIL"), show="headings", height=5)
+tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUBJECT", "EMAIL"), show="headings", height=5)
 tree.pack(padx=10, pady=10)
 
 # Configuring the treeview columns
-tree.column("S.NO", width=50, anchor=  CENTER)
-tree.column("NAME", width=200, anchor=  CENTER)
-tree.column("SUB CODE", width=100, anchor=  CENTER)
+tree.column("S.NO", width=25, anchor=  CENTER)
+tree.column("NAME", width=100, anchor=  CENTER)
+tree.column("SUBJECT", width=100, anchor=  CENTER)
 tree.column("EMAIL", width=200, anchor=  CENTER)
 
 # Configuring the treeview headings
 tree.heading("S.NO", text="S.NO")
 tree.heading("NAME", text="NAME")
-tree.heading("SUB CODE", text="SUB CODE")
+tree.heading("SUBJECT", text="SUBJECT")
 tree.heading("EMAIL", text="EMAIL")
-
-# Inserting some sample data into the treeview
-tree.insert("", "end", values=("1", "Vineeth M.", "1117", "VineethM@vc.ac.in"))
-tree.insert("", "end", values=("2", "Kung Fu Panda", "2341", "bigpanda@vc.ac.in"))
-tree.insert("", "end", values=("3", "Superman", "2222", "kryptonite@vc.ac.in"))
-tree.insert("", "end", values=("4", "Batman", "7856", "batmobile@gotham.vc.ac.in"))
-
-# Creating the view more button
-view_more_btn =   Button(list_section, text="View More", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10)
-view_more_btn.pack()
-
-
-
-
 
 # Starting the main loop
 root.mainloop()

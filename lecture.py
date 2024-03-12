@@ -2,11 +2,23 @@ import subprocess
 from tkinter import *
 from tkinter import ttk
 import assets
+import sqlite3
 
 # Creating the main window
 root =  Tk()
 root.title("Timetable")
 root.geometry("800x600+100+100")
+
+# Database Connection
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
+# cursor.execute("""
+#   CREATE TABLE lecture (
+#     teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
+#     teacher_name VARCHAR(45) NOT NULL,
+#     subject_name VARCHAR(45) NOT NULL);
+#   """)
+ 
 
 # Creating the left sidebar
 sidebar =  Frame(root, width=200, height=600, bg="#4a148c")
@@ -23,13 +35,14 @@ menu_items = [
 
 def save_details():
     Teacher_Name=teacher_name_entry.get()
-    Subject=subject_entry.get()
-    New = {
-        (Subject,Teacher_Name)
-    }
+    Subject_Name=subject_entry.get()
+    New = (Teacher_Name, Subject_Name)
     assets.subjects.append(New)
-    print(assets.subjects)
-    
+    cursor.execute("INSERT INTO lecture (teacher_name, subject_name) VALUES (?, ?)", (Teacher_Name, Subject_Name))
+    cursor.execute("SELECT * FROM lecture")
+    print(cursor.fetchall())
+
+    conn.commit()    
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
