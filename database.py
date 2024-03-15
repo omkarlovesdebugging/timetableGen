@@ -3,6 +3,8 @@ import sqlite3
 conn = sqlite3.connect('Timetable_Generator.db')
 
 c = conn.cursor()
+c.execute("delete from teacher")
+c.execute("DELETE FROM sqlite_sequence WHERE name='teacher'")
 conn.commit()
 # CREATE TABLE teacher (
 #     teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,3 +14,9 @@ conn.commit()
 #     email VARCHAR(45) NOT NULL);
 print('Connnection successful')
 conn.close()
+
+
+
+
+
+

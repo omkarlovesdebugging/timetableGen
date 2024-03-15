@@ -2,12 +2,33 @@ import subprocess
 from tkinter import *
 from tkinter import ttk
 import sqlite3
+from tkinter import messagebox
+import tkinter as tk
+
 
 def save_details():
     f = first_name_entry.get()
     l = last_name_entry.get()
     s = subject_entry.get()
     e = email_entry.get()
+    
+    if f.strip() and l.strip() and s.strip() and e.strip()  :
+        pass
+    else:
+        return messagebox.showerror("error","Completion of all fields is mandatory.")
+
+    cursor.execute("select * from teacher")
+    rows = cursor.fetchall()
+    for row in rows :
+        if (row[1]+row[2] == f+l) and (row[3]==s):
+             Yes=messagebox.showerror("error","Entry already exists") 
+             if Yes :
+                 first_name_entry.delete(0,tk.END)
+                 last_name_entry.delete(0,tk.END)
+                 subject_entry.delete(0,tk.END)
+                 email_entry.delete(0,tk.END)
+
+                 return ValueError        
 
     cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email) VALUES (?, ?, ?, ?)", (f, l, s, e))
     cursor.execute("SELECT * FROM teacher")
