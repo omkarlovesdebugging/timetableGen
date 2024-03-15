@@ -12,13 +12,16 @@ def save_details():
     s = subject_entry.get()
     e = email_entry.get()
     
-    if f.strip() and l.strip() and s.strip() and e.strip()  :
+    # koi bhi field empty nahi chut ni chahiye isliye
+    if f.rstrip() and l.rstrip() and s.rstrip() and e.rstrip()  :
         pass
     else:
         return messagebox.showerror("error","Completion of all fields is mandatory.")
 
     cursor.execute("select * from teacher")
     rows = cursor.fetchall()
+
+    #koi bhi entry repeat nhi honi chahiye isliye 
     for row in rows :
         if (row[1]+row[2] == f+l) and (row[3]==s):
              Yes=messagebox.showerror("error","Entry already exists") 
