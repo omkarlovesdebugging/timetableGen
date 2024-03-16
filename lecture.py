@@ -21,17 +21,53 @@ menu_items = [
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
+# Connect to SQLite database
+conn = sqlite3.connect('lecture.db')
+cursor = conn.cursor()
+
+# Create a table named 'subjects' in the database
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS subjects(
+        teacher_name TEXT,
+        subject_name TEXT,
+        room TEXT
+    )
+''')
+
 def save_details():
     Teacher_Name=teacher_name_entry.get()
-    Subject=subject_entry.get()
-    New = {
-        (Subject,Teacher_Name)
-    }
+    Subject_Name=subject_entry.get()
+    New = (Subject_Name,Teacher_Name)
+
+    # check for empty fields
+    if not (Teacher_Name.rstrip() and Subject_Name.rstrip()):
+        return messagebox.showerror("error","Completion of all fields is mandatory.")
+
+    cursor.execute("select * from subjects")
+    rows = cursor.fetchall()
+
+    # check for repetition 
+    for row in rows :
+        if (row[1] == Teacher_Name) and (row[2] == Subject_Name):
+            msg = messagebox.showerror("error","Entry already exists") 
+            if msg :
+                teacher_name_entry.delete(0,tkinter.END)
+                subject_entry.delete(0,tkinter.END)
+
+                return ValueError
+
     assets.subjects.append(New)
     print(assets.subjects)
-    conn = sqlite3.connect("timetable_generator.db")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO teacher (first_name,subject_name) VALUES (?,?)",(Teacher_Name,Subject))
+
+    
+    
+
+    # cursor.executemany("INSERT INTO subjects(subject_name, teacher_name, room) VALUES(?,?,?)", assets.subjects)
+
+    cursor.execute("INSERT INTO subjects (teacher_name, subject_name, room) VALUES (?, ?, ?)", (Teacher_Name, Subject_Name, "None"))
+    cursor.execute("SELECT * FROM subjects")
+    print(cursor.fetchall())
+    # Commit the changes and close the connection
     conn.commit()
     conn.close()
     print("Data Saved")
