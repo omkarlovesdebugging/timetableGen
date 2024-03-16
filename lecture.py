@@ -29,58 +29,13 @@ def save_details():
     }
     assets.subjects.append(New)
     print(assets.subjects)
-
-    
-     # Connect to SQLite database
-    conn = sqlite3.connect('lecture.db')
+    conn = sqlite3.connect("timetable_generator.db")
     cursor = conn.cursor()
-
-    # Insert the details into the database
-    cursor.execute("INSERT INTO lectures (subject, teacher_name) VALUES (?, ?)", (Subject, Teacher_Name))
-
-
-    def connect_to_db(db_name):
-        # Connect to SQLite database
-        conn = sqlite3.connect(db_name)
-
-        # Create a cursor object
-        cursor = conn.cursor()
-
-        return conn, cursor
-
-    # Use the function to connect to your database
-    conn, cursor = connect_to_db('lecture.db')
-
-    # Create a table named 'subjects' in the database
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS subjects(
-            subject_name TEXT,
-            teacher_name TEXT,
-            room TEXT
-        )
-    ''')
-
-    # Insert the subjects data into the table
-    subjects = [
-        ("DBMS", "Vijay Sir", "Room S-11"),
-        ("CN Lab", "Anushree", "Room S-12"),
-        ("Engg. Mathematics", "Netto Mam", "Room P-01"),
-        ("Engg. Physics", "Vidya Puja", "Room G007"),
-        ("Car Mechanics", "Don Vijay", "Room X73"),
-        ("Python Lab", "Sneha Pakka", "Room X74"),
-        ("COA Maths", "Abhay FirseShekhar", "Room F14"),
-        ("COA Lab", "Baburao", "Room F14/F16/F17")
-    ]
-
-    cursor.executemany('''
-        INSERT INTO subjects(subject_name, teacher_name, room) VALUES(?,?,?)
-    ''', subjects)
-     # Commit the changes and close the connection
+    cursor.execute("INSERT INTO teacher (first_name,subject_name) VALUES (?,?)",(Teacher_Name,Subject))
     conn.commit()
     conn.close()
+    print("Data Saved")
     
-
-
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
