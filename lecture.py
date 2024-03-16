@@ -21,60 +21,52 @@ menu_items = [
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
+# Connect to SQLite database
+conn = sqlite3.connect('lecture.db')
+cursor = conn.cursor()
+
+# Create a table named 'subjects' in the database
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS subjects(
+        teacher_name TEXT,
+        subject_name TEXT,
+        room TEXT
+    )
+''')
+
 def save_details():
     Teacher_Name=teacher_name_entry.get()
-    Subject=subject_entry.get()
-    New = {
-        (Subject,Teacher_Name)
-    }
+    Subject_Name=subject_entry.get()
+    New = (Subject_Name,Teacher_Name)
+
+    # check for empty fields
+    if not (Teacher_Name.rstrip() and Subject_Name.rstrip()):
+        return messagebox.showerror("error","Completion of all fields is mandatory.")
+
+    cursor.execute("select * from subjects")
+    rows = cursor.fetchall()
+
+    # check for repetition 
+    for row in rows :
+        if (row[1] == Teacher_Name) and (row[2] == Subject_Name):
+            msg = messagebox.showerror("error","Entry already exists") 
+            if msg :
+                teacher_name_entry.delete(0,tkinter.END)
+                subject_entry.delete(0,tkinter.END)
+
+                return ValueError
+
     assets.subjects.append(New)
     print(assets.subjects)
 
     
-     # Connect to SQLite database
-    conn = sqlite3.connect('lecture.db')
-    cursor = conn.cursor()
+    
 
-    # Insert the details into the database
-    cursor.execute("INSERT INTO lectures (subject, teacher_name) VALUES (?, ?)", (Subject, Teacher_Name))
+    # cursor.executemany("INSERT INTO subjects(subject_name, teacher_name, room) VALUES(?,?,?)", assets.subjects)
 
-
-    def connect_to_db(db_name):
-        # Connect to SQLite database
-        conn = sqlite3.connect(db_name)
-
-        # Create a cursor object
-        cursor = conn.cursor()
-
-        return conn, cursor
-
-    # Use the function to connect to your database
-    conn, cursor = connect_to_db('lecture.db')
-
-    # Create a table named 'subjects' in the database
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS subjects(
-            subject_name TEXT,
-            teacher_name TEXT,
-            room TEXT
-        )
-    ''')
-
-    # Insert the subjects data into the table
-    subjects = [
-        ("DBMS", "Vijay Sir", "Room S-11"),
-        ("CN Lab", "Anushree", "Room S-12"),
-        ("Engg. Mathematics", "Netto Mam", "Room P-01"),
-        ("Engg. Physics", "Vidya Puja", "Room G007"),
-        ("Car Mechanics", "Don Vijay", "Room X73"),
-        ("Python Lab", "Sneha Pakka", "Room X74"),
-        ("COA Maths", "Abhay FirseShekhar", "Room F14"),
-        ("COA Lab", "Baburao", "Room F14/F16/F17")
-    ]
-
-    cursor.executemany('''
-        INSERT INTO subjects(subject_name, teacher_name, room) VALUES(?,?,?)
-    ''', subjects)
+    cursor.execute("INSERT INTO subjects (teacher_name, subject_name, room) VALUES (?, ?, ?)", (Teacher_Name, Subject_Name, "None"))
+    cursor.execute("SELECT * FROM subjects")
+    print(cursor.fetchall())
      # Commit the changes and close the connection
     conn.commit()
     conn.close()

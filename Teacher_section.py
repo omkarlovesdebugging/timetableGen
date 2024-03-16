@@ -37,6 +37,12 @@ def save_details():
     cursor.execute("SELECT * FROM teacher")
     print(cursor.fetchall())
     conn.commit()
+
+    first_name_entry.delete(0,tk.END)
+    last_name_entry.delete(0,tk.END)
+    subject_entry.delete(0,tk.END)
+    email_entry.delete(0,tk.END)
+
     tree_insert_details()
 
 def tree_insert_details():
