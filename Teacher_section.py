@@ -33,7 +33,7 @@ def save_details():
 
                  return ValueError        
 
-    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email) VALUES (?, ?, ?, ?)", (f, l, s, e))
+    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email) VALUES (?, ?, ?, ?)", (f.rstrip(), l.rstrip(), s.rstrip(), e.rstrip()))
     cursor.execute("SELECT * FROM teacher")
     print(cursor.fetchall())
     conn.commit()
