@@ -1,7 +1,9 @@
 import subprocess
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import assets
+import sqlite3
+import tkinter
 
 # Creating the main window
 root =  Tk()
@@ -21,15 +23,44 @@ menu_items = [
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
+# cursor.execute("""
+#   CREATE TABLE lecture (
+#     teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
+#     teacher_name VARCHAR(45) NOT NULL,
+#     subject_name VARCHAR(45) NOT NULL);
+#   """)
+
 def save_details():
     Teacher_Name=teacher_name_entry.get()
-    Subject=subject_entry.get()
-    New = {
-        (Subject,Teacher_Name)
-    }
+    Subject_Name=subject_entry.get()
+    New = (Teacher_Name, Subject_Name)
+
+    # check for empty fields
+    if not (Teacher_Name.rstrip() and Subject_Name.rstrip()):
+        return messagebox.showerror("error","Completion of all fields is mandatory.")
+
+    cursor.execute("select * from lecture")
+    rows = cursor.fetchall()
+
+    # check for repetition 
+    for row in rows :
+        if (row[1] == Teacher_Name) and (row[2] == Subject_Name):
+            msg = messagebox.showerror("error","Entry already exists") 
+            if msg :
+                teacher_name_entry.delete(0,tkinter.END)
+                subject_entry.delete(0,tkinter.END)
+
+                return ValueError
+
     assets.subjects.append(New)
-    print(assets.subjects)
-    
+
+    cursor.execute("INSERT INTO lecture (teacher_name, subject_name) VALUES (?, ?)", (Teacher_Name, Subject_Name))
+    cursor.execute("SELECT * FROM lecture")
+
+    print(cursor.fetchall())
+    conn.commit()  
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
