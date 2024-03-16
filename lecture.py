@@ -67,12 +67,11 @@ def save_details():
     cursor.execute("INSERT INTO subjects (teacher_name, subject_name, room) VALUES (?, ?, ?)", (Teacher_Name, Subject_Name, "None"))
     cursor.execute("SELECT * FROM subjects")
     print(cursor.fetchall())
-     # Commit the changes and close the connection
+    # Commit the changes and close the connection
     conn.commit()
     conn.close()
+    print("Data Saved")
     
-
-
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
