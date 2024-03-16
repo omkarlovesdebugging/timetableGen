@@ -1,9 +1,10 @@
 # Import tkinter and ttk modules
 import subprocess
 from tkinter import *
-from tkinter import ttk
-from assets import subjects
+from tkinter import ttk, messagebox
+from assets import subjects, rooms
 import random
+import sqlite3
 
 # Create a root window
 root = Tk()
@@ -29,6 +30,10 @@ menu_items = [
 
 # Create a list of buttons for the sidebar
 buttons = []
+
+# Database code
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
@@ -62,11 +67,14 @@ def activity() :
     subprocess.run(["python","notifications.py"])
 
 def load_timetable(subjects):
-        
+    
+    if (len(subjects) < 5 and len(subjects) > 0):
+        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+        return ValueError
+
     # Create a list of days for the calendar
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     
-    # # Create a list of subjects for the calendar
     # subjects = []
 
     # Create a variable to keep track of the current subject index
@@ -76,7 +84,6 @@ def load_timetable(subjects):
     for day in days:
         # Create a label for the day
         day_label = Label(calendar, text=day, font=("Arial", 12, "bold"), bg="#C1BBEB", fg="#3a3a3a")
-        # Grid the label to the calendar
         day_label.grid(row=0, column=days.index(day), padx=5, pady=5)
 
         # Create a frame for the time slots
@@ -104,7 +111,7 @@ def load_timetable(subjects):
 
                 if subjects != []:
                     if ((subject_index >= len(subjects)) and subjects != []):
-                        subject_index = random.randint(0, 7)
+                        subject_index = random.randint(0, len(subjects) - 1)
                     # Get the current subject from the list
                     subject = subjects[subject_index]
                     
@@ -120,14 +127,30 @@ def load_timetable(subjects):
                     teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
 
                     # Create a label for the room number
-                    room_number = Label(subject_frame, text=subject[2], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    room_number = Label(subject_frame, text=rooms[random.randint(0, len(rooms) - 1)], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
+
         # subject_index = 0
         if ((subject_index >= len(subjects)) and subjects != []):
-            subject_index = random.randint(0, 7)
+            subject_index = random.randint(0, len(subjects) - 1)
 
 def fill_timetable():
-    load_timetable(subjects=subjects)
+    
+    cursor.execute("SELECT * FROM teacher")
+    data = cursor.fetchall()
+
+    formatted_data = []
+
+    for i in data:
+        teacher_fullname = i[1] + " " + i[2]
+        subject_fullname = i[3]
+
+        formatted_data.append((teacher_fullname, subject_fullname))
+    
+    print(formatted_data)
+
+    load_timetable(subjects=formatted_data)
+    # load_timetable(subjects=subjects)
 
 # Loop through the menu items and create buttons
 for item in menu_items:
@@ -182,6 +205,10 @@ load_timetable([])
 # Create a generate button
 generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
 generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
+
+save_button = Button(content, text="SAVE", font=("Arial", 10, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=2)
+save_button.pack(side=BOTTOM, anchor=NE, padx=10, pady=10)
+
 
 # Start the main loop
 root.mainloop()
