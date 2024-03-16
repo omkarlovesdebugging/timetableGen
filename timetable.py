@@ -150,6 +150,10 @@ def fill_timetable():
     print(formatted_data)
 
     load_timetable(subjects=formatted_data)
+    
+    if (len(formatted_data) == 0):
+        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+        return ValueError
     # load_timetable(subjects=subjects)
 
 # Loop through the menu items and create buttons
