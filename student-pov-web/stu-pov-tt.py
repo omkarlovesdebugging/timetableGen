@@ -50,29 +50,29 @@ def activity() :
 
 
 
-def load_timetable(subjects):
+def load_timetable():
     list = []
     
-    if (len(subjects) < 5 and len(subjects) > 0):
-        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
-        return ValueError
+    # if (len(subjects) < 5 and len(subjects) > 0):
+    #     msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+    #     return ValueError
 
     # Create a list of days for the calendar
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     
     # subjects = []
-
+    index=0
     # Create a variable to keep track of the current subject index
     subject_index = 0
 
 
-    cursor.execute("select * from teacher")
+    cursor.execute("select * from timetable")
     rows = cursor.fetchall()
     for row in rows:
         list.append(row)
-
+    print(list)
     # Loop through the days and create labels
-    for day in days:
+    for i,day in enumerate(days):
         # Create a label for the day
         day_label = Label(calendar, text=day, font=("Arial", 12, "bold"), bg="#C1BBEB", fg="#3a3a3a")
         day_label.grid(row=0, column=days.index(day), padx=5, pady=5)
@@ -85,13 +85,13 @@ def load_timetable(subjects):
         time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
 
         # Loop through the time slots and create labels
-        for slot in time_slots:
+        for j,slot in enumerate(time_slots):
             # Create a label for the time slot
             slot_label = Label(time_frame, text=slot, font=("Arial", 8), bg="#C1BBEB", fg="#3a3a3a")
             
             # Pack the label to the time frame
             slot_label.pack(side=TOP, anchor=W)
-
+            
             # Check if the time slot is not a break
             if slot != "BREAK":
 
@@ -106,28 +106,28 @@ def load_timetable(subjects):
                     # Get the current subject from the list
                     subject = subjects[subject_index]
                     
-                    # Increment the subject index
+                #     # Increment the subject index
                     subject_index += 1
-
+                    
                     # Create a label for the subject name
-                    subject_name = Label(subject_frame, text=list[index.day][slot], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
+                
+                    subject_name = Label(subject_frame, text=list[index][0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
                     subject_name.pack(side=TOP, anchor=W, padx=0, pady=0)
 
                     # Create a label for the teacher name
-                    teacher_name = Label(subject_frame, text=list[], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    teacher_name = Label(subject_frame, text=list[index][1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
-
+                    
                     # Create a label for the room number
-                    room_number = Label(subject_frame, text=rooms[random.randint(0, len(rooms) - 1)], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    room_number = Label(subject_frame, text=list[index][2], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
-
-
-
+                    index=index+1
 
         # subject_index = 0
         if ((subject_index >= len(subjects)) and subjects != []):
             subject_index = random.randint(0, len(subjects) - 1)
 
+    
 def fill_timetable():
     
     cursor.execute("SELECT * FROM teacher")
@@ -191,7 +191,7 @@ content.pack(side=TOP, fill=BOTH, expand=True)
 calendar = Frame(content, bg="#C1BBEB", width=550, height=500)
 calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=20, pady=20)
 
-load_timetable([])
+load_timetable()
 
 # Create a generate button
 # generate_button = Button(content, text="GET", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)

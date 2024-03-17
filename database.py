@@ -5,9 +5,9 @@ conn = sqlite3.connect('timetable_generator.db')
 c = conn.cursor()
 
 c.execute("""
-delete from timetable
+select *  from timetable
 """)
-c.execute("")
+print(c.fetchall())
 conn.commit()
 
 print('Connnection successful')

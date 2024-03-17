@@ -153,10 +153,10 @@ def save_details():
     
     for i in range(0,len(save_data)):
         cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number) VALUES ( ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2] ))
+        conn.commit()
     
     cursor.execute('select *  from timetable')
-    conn.commit()
-    print(cursor.fetchall())
+    print(cursor.fetchall(),"fettching from db")
     
 
 def fill_timetable():
