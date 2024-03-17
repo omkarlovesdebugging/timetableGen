@@ -6,6 +6,8 @@ from assets import subjects, rooms
 import random
 import sqlite3
 
+def save_details():
+    pass
 # Create a root window
 root = Tk()
     
@@ -67,7 +69,7 @@ def activity() :
     subprocess.run(["python","notifications.py"])
 
 def load_timetable(subjects):
-    
+    save_data = []
     if (len(subjects) < 5 and len(subjects) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
@@ -92,7 +94,7 @@ def load_timetable(subjects):
 
         # Create a list of time slots for the day
         time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
-
+        
         # Loop through the time slots and create labels
         for slot in time_slots:
             # Create a label for the time slot
@@ -109,6 +111,8 @@ def load_timetable(subjects):
                 subject_frame.pack_propagate(1)
                 subject_frame.pack(side=TOP, fill=X, padx=10, pady=10)
 
+                
+                data = []  
                 if subjects != []:
                     if ((subject_index >= len(subjects)) and subjects != []):
                         subject_index = random.randint(0, len(subjects) - 1)
@@ -121,18 +125,36 @@ def load_timetable(subjects):
                     # Create a label for the subject name
                     subject_name = Label(subject_frame, text=subject[0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
                     subject_name.pack(side=TOP, anchor=W, padx=0, pady=0)
+                    
 
                     # Create a label for the teacher name
                     teacher_name = Label(subject_frame, text=subject[1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
+                    
 
+                    room=rooms[random.randint(0, len(rooms) - 1)]
                     # Create a label for the room number
-                    room_number = Label(subject_frame, text=rooms[random.randint(0, len(rooms) - 1)], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    room_number = Label(subject_frame, text=room, font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
+                    
+
+                    data=[subject[0],subject[1],room]
+                    
+                    save_data.append(data)
+
+                    
 
         # subject_index = 0
         if ((subject_index >= len(subjects)) and subjects != []):
             subject_index = random.randint(0, len(subjects) - 1)
+    
+    for i in range(0,len(save_data)):
+        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number) VALUES ( ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2] ))
+    
+    cursor.execute('select *  from timetable')
+    print(cursor.fetchall())
+    
+
 
 def fill_timetable():
     
@@ -210,7 +232,7 @@ load_timetable([])
 generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
 generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
 
-save_button = Button(content, text="SAVE", font=("Arial", 10, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=2)
+save_button = Button(content, text="SAVE", font=("Arial", 10, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=2,command=save_details)
 save_button.pack(side=BOTTOM, anchor=NE, padx=10, pady=10)
 
 
