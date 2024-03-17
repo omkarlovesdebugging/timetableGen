@@ -22,9 +22,6 @@ sidebar.pack(side=LEFT, fill=Y)
 # Create a list of menu items for the sidebar
 menu_items = [
     ("TIMETABLE", PhotoImage(file="Images/home_icon.png").subsample(2)),
-    ("LECTURES", PhotoImage(file="Images/lecturer_icon(1).png").subsample(2)),
-    ("TEACHERS", PhotoImage(file="Images/teacher_icon(1).png").subsample(2)),
-    ("USER", PhotoImage(file="Images/user_icon(1).png").subsample(2)),
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
@@ -35,36 +32,22 @@ buttons = []
 conn = sqlite3.connect("timetable_generator.db")
 cursor = conn.cursor()
 
-def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","lecture.py"])
 
 
 def timetable_page() :
     print("Navigating to timetable page...") #Debug Message
     print("Timetable Page opened")#Debug Message
     root.destroy()
-    subprocess.run(["python","timetable.py"])
+    subprocess.run(["python","student-pov-web/stu-pov-tt.py"])
 
-def teacher_section() :
-    print("Navigating to teacher_section page...") #Debug Message
-    print("Teacher Section Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","Teacher_section.py"])
-
-def USER() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","user.py"])
 
 def activity() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
+    print("Navigating to activity page...") #Debug Message
+    print("activity Page opened")#Debug Message
     root.destroy()
-    subprocess.run(["python","notifications.py"])
+    subprocess.run(["python","student-pov-web/stu-pov-notifications.py"])
+
+
 
 def load_timetable(subjects):
     
@@ -156,21 +139,14 @@ def fill_timetable():
         return ValueError
     # load_timetable(subjects=subjects)
 
+
 # Loop through the menu items and create buttons
 for item in menu_items:
-    if (item[0] == "TEACHERS"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
-        button.pack(anchor="w") 
-    # Create a button with text and icon
-    elif (item[0]=="LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
-        button.pack(anchor="w") 
-    elif (item[0]=="TIMETABLE"):
+
+    if (item[0]=="TIMETABLE"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
         button.pack(anchor="w") 
-    elif (item[0]=="USER"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=USER)
-        button.pack(anchor="w") 
+    
     elif (item[0]=="LATEST ACTIVITY"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=activity)
         button.pack(anchor="w") 
@@ -207,12 +183,11 @@ calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=20, pady=20)
 load_timetable([])
 
 # Create a generate button
-generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
+generate_button = Button(content, text="GET", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
 generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
 
-save_button = Button(content, text="SAVE", font=("Arial", 10, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=2)
-save_button.pack(side=BOTTOM, anchor=NE, padx=10, pady=10)
-
+# save_button = Button(content, text="SAVE", font=("Arial", 10, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=2)
+# save_button.pack(side=BOTTOM, anchor=NE, padx=10, pady=10)
 
 # Start the main loop
 root.mainloop()
