@@ -2,6 +2,7 @@ import subprocess
 from tkinter import *
 from tkinter import ttk
 import time
+import sqlite3
 
 # Create a root window
 root = Tk()
@@ -18,6 +19,7 @@ sidebar.pack(side=LEFT, fill=Y)
 
 # Create a list of menu items for the sidebar
 menu_items = [
+    ("TIMETABLE", PhotoImage(file="Images/home_icon.png").subsample(2)),
     ("USER", PhotoImage(file="Images/user_icon.png").subsample(2)),
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
@@ -25,11 +27,21 @@ menu_items = [
 # Create a list of buttons for the sidebar
 buttons = []
 
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
+
 def USER() :
     print("Navigating to lecture page...") #Debug Message
     print("Lecture Page opened")#Debug Message
     root.destroy()
     subprocess.run(["python","teacher-pov-web/tea-profile.py"])
+
+def timetable_page() :
+    print("Navigating to timetable page...") #Debug Message
+    print("Timetable Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","teacher-pov-web/stu-pov-tt.py"])
+
 
 def activity() :
     print("Navigating to lecture page...") #Debug Message
@@ -43,7 +55,9 @@ for item in menu_items:
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=USER)
         button.pack(anchor="w") 
     # Create a button with text and icon
-    
+    elif (item[0]=="TIMETABLE"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
+        button.pack(anchor="w") 
     elif (item[0]=="LATEST ACTIVITY"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=activity)
         button.pack(anchor="w") 
