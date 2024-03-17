@@ -6,11 +6,11 @@ from assets import subjects, rooms
 import random
 import sqlite3
 
-def save_details():
-    pass
+
 # Create a root window
 root = Tk()
-    
+ 
+save_data = []    
 # Set the title and icon of the window
 root.title("Timetable")
 
@@ -69,7 +69,7 @@ def activity() :
     subprocess.run(["python","notifications.py"])
 
 def load_timetable(subjects):
-    save_data = []
+    
     if (len(subjects) < 5 and len(subjects) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
@@ -146,7 +146,10 @@ def load_timetable(subjects):
 
         # subject_index = 0
         if ((subject_index >= len(subjects)) and subjects != []):
-            subject_index = random.randint(0, len(subjects) - 1)
+            subject_index = random.randint(0, len(subjects) - 1)    
+
+
+def save_details():
     
     for i in range(0,len(save_data)):
         cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number) VALUES ( ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2] ))
@@ -154,7 +157,6 @@ def load_timetable(subjects):
     cursor.execute('select *  from timetable')
     print(cursor.fetchall())
     
-
 
 def fill_timetable():
     
@@ -231,6 +233,7 @@ load_timetable([])
 # Create a generate button
 generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
 generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
+
 
 save_button = Button(content, text="SAVE", font=("Arial", 10, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=2,command=save_details)
 save_button.pack(side=BOTTOM, anchor=NE, padx=10, pady=10)

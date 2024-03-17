@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter import ttk
 import assets
 import sqlite3
+import tkinter as tk
+from tkinter import messagebox
 # Creating the main window
 root =  Tk()
 root.title("Timetable")
@@ -51,8 +53,8 @@ def save_details():
         if (row[1] == Teacher_Name) and (row[2] == Subject_Name):
             msg = messagebox.showerror("error","Entry already exists") 
             if msg :
-                teacher_name_entry.delete(0,tkinter.END)
-                subject_entry.delete(0,tkinter.END)
+                teacher_name_entry.delete(0,tk.END)
+                subject_entry.delete(0,tk.END)
 
                 return ValueError
 
