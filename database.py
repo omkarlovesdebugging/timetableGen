@@ -1,17 +1,15 @@
 import sqlite3
 
-conn = sqlite3.connect('Timetable_Generator.db')
+conn = sqlite3.connect('timetable_generator.db')
 
 c = conn.cursor()
-c.execute("delete from teacher")
-c.execute("DELETE FROM sqlite_sequence WHERE name='teacher'")
+
+c.execute("""
+delete from timetable
+""")
+c.execute("")
 conn.commit()
-# CREATE TABLE teacher (
-#     teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
-#     first_name VARCHAR(45) NOT NULL,
-#     last_name VARCHAR(45) NOT NULL,
-#     subject_name VARCHAR(45) NOT NULL,
-#     email VARCHAR(45) NOT NULL);
+
 print('Connnection successful')
 conn.close()
 
@@ -19,4 +17,9 @@ conn.close()
 
 
 
+# CREATE TABLE timetable (
+#     subject_name VARCHAR(45) ,
+#     teacher_name VARCHAR(45) ,
+#     room_number VARCHAR(45) )
+# """)
 
