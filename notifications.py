@@ -1,7 +1,7 @@
 import tkinter as tk
-from tkinter import ttk
 import sqlite3
-import time
+from tkinter import ttk
+from datetime import datetime
 
 # Connect to the database
 conn = sqlite3.connect("timetable_generator.db")
@@ -64,9 +64,9 @@ main_section = tk.Frame(root, bg="white", width=800, height=500)
 main_section.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 # Add labels for day, date, and time
-current_time = time.strftime("%H:%M:%S")
-current_date = time.strftime("%A, %B %d, %Y")
-day_date_time_label = tk.Label(main_section, text=f"Day: {current_date}", font=("Arial", 14), bg="white")
+current_time = datetime.now().strftime("%H:%M:%S")
+current_date = datetime.now().strftime("%A, %B %d, %Y")
+day_date_time_label = tk.Label(main_section, text=f"Day: {current_date} - Time: {current_time}", font=("Arial", 14), bg="white")
 day_date_time_label.pack(pady=(20, 10))
 
 # Example Notifications
@@ -103,30 +103,19 @@ right_section.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 # Function to handle sending notification
 def send_notification():
-    # Fetch data from input fields
-    time_value = time_entry.get()
-    day_value = day_entry.get()
-    date_value = date_entry.get()
+    # Get current time and date
+    current_time = datetime.now().strftime("%H:%M:%S")
+    current_date = datetime.now().strftime("%A, %B %d, %Y")
+
+    # Fetch data from message entry
     message_value = message_entry.get("1.0", tk.END)  # Get message from text widget
 
     # Insert data into database
-    cursor.execute("INSERT INTO notifications (time, day, date, message) VALUES (?, ?, ?, ?)", (time_value, day_value, date_value, message_value))
+    cursor.execute("INSERT INTO notifications (time, day, message) VALUES (?, ?, ?)", (current_time, current_date, message_value))
     conn.commit()
     print("Notification sent successfully!")  # Debug Message
 
-# Labels and entry widgets for time, day, date, and message
-tk.Label(right_section, text="Time:", font=("Arial", 12), bg="white").pack(pady=(20, 5))
-time_entry = tk.Entry(right_section, font=("Arial", 12), bg="white")
-time_entry.pack(pady=5)
-
-tk.Label(right_section, text="Day:", font=("Arial", 12), bg="white").pack(pady=5)
-day_entry = tk.Entry(right_section, font=("Arial", 12), bg="white")
-day_entry.pack(pady=5)
-
-tk.Label(right_section, text="Date:", font=("Arial", 12), bg="white").pack(pady=5)
-date_entry = tk.Entry(right_section, font=("Arial", 12), bg="white")
-date_entry.pack(pady=5)
-
+# Label and text widget for message
 tk.Label(right_section, text="Message:", font=("Arial", 12), bg="white").pack(pady=5)
 message_entry = tk.Text(right_section, font=("Arial", 12), bg="white", height=5)
 message_entry.pack(pady=5)
