@@ -34,6 +34,7 @@ cursor = conn.cursor()
 
 
 
+
 def timetable_page() :
     print("Navigating to timetable page...") #Debug Message
     print("Timetable Page opened")#Debug Message
@@ -50,6 +51,7 @@ def activity() :
 
 
 def load_timetable(subjects):
+    list = []
     
     if (len(subjects) < 5 and len(subjects) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
@@ -62,6 +64,12 @@ def load_timetable(subjects):
 
     # Create a variable to keep track of the current subject index
     subject_index = 0
+
+
+    cursor.execute("select * from teacher")
+    rows = cursor.fetchall()
+    for row in rows:
+        list.append(row)
 
     # Loop through the days and create labels
     for day in days:
@@ -102,16 +110,19 @@ def load_timetable(subjects):
                     subject_index += 1
 
                     # Create a label for the subject name
-                    subject_name = Label(subject_frame, text=subject[0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
+                    subject_name = Label(subject_frame, text=list[index.day][slot], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
                     subject_name.pack(side=TOP, anchor=W, padx=0, pady=0)
 
                     # Create a label for the teacher name
-                    teacher_name = Label(subject_frame, text=subject[1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    teacher_name = Label(subject_frame, text=list[], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
 
                     # Create a label for the room number
                     room_number = Label(subject_frame, text=rooms[random.randint(0, len(rooms) - 1)], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
+
+
+
 
         # subject_index = 0
         if ((subject_index >= len(subjects)) and subjects != []):
@@ -183,8 +194,8 @@ calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=20, pady=20)
 load_timetable([])
 
 # Create a generate button
-generate_button = Button(content, text="GET", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
-generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
+# generate_button = Button(content, text="GET", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
+# generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
 
 # save_button = Button(content, text="SAVE", font=("Arial", 10, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=2)
 # save_button.pack(side=BOTTOM, anchor=NE, padx=10, pady=10)

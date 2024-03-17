@@ -155,6 +155,7 @@ def save_details():
         cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number) VALUES ( ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2] ))
     
     cursor.execute('select *  from timetable')
+    conn.commit()
     print(cursor.fetchall())
     
 
