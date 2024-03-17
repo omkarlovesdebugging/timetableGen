@@ -1,122 +1,80 @@
-import subprocess
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
+import sqlite3
 import time
 
-# Create a root window
-root = Tk()
-    
-# Set the title and icon of the window
+# Connect to the database
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
+
+# Create the tkinter window
+root = tk.Tk()
 root.title("Timetable")
 
 # Set the size and position of the window
-root.geometry("800x600+100+100")
+root.geometry("1000x600+100+100")
 
 # Create a left sidebar frame
-sidebar = Frame(root, bg="#4a148c", width=200, height=600)
-sidebar.pack(side=LEFT, fill=Y)
+sidebar = tk.Frame(root, bg="#4a148c", width=200, height=600)
+sidebar.pack(side=tk.LEFT, fill=tk.Y)
 
 # Create a list of menu items for the sidebar
 menu_items = [
-    ("TIMETABLE", PhotoImage(file="Images/home_icon(1).png").subsample(2)),
-    ("LECTURES", PhotoImage(file="Images/lecturer_icon(1).png").subsample(2)),
-    ("TEACHERS", PhotoImage(file="Images/teacher_icon(1).png").subsample(2)),
-    ("USER", PhotoImage(file="Images/user_icon(1).png").subsample(2)),
-    ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon.png").subsample(2))
+    ("TIMETABLE", "Images/home_icon(1).png"),
+    ("LECTURES", "Images/lecturer_icon(1).png"),
+    ("TEACHERS", "Images/teacher_icon(1).png"),
+    ("USER", "Images/user_icon(1).png"),
+    ("LATEST ACTIVITY", "Images/activity_icon.png")
 ]
 
-def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
+# Function to handle button clicks
+def handle_click(page):
+    print(f"Navigating to {page} page...")  # Debug Message
     root.destroy()
-    subprocess.run(["python","lecture.py"])
-
-
-def timetable_page() :
-    print("Navigating to timetable page...") #Debug Message
-    print("Timetable Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","timetable.py"])
-
-def teacher_section() :
-    print("Navigating to teacher_section page...") #Debug Message
-    print("Teacher Section Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","Teacher_section.py"])
-
-def USER() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","user.py"])
-
-def activity() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","notifications.py"])
+    subprocess.run(["python", f"{page}.py"])
 
 # Create a list of buttons for the sidebar
 buttons = []
 
-# Loop through the menu items and create buttons
 for item in menu_items:
-    if (item[0] == "LATEST ACTIVITY"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=activity)
-        button.pack(anchor="w") 
-    # Create a button with text and icon
-    elif (item[0]=="LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
-        button.pack(anchor="w") 
-    elif (item[0]=="TIMETABLE"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
-        button.pack(anchor="w") 
-    elif (item[0]=="USER"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=USER)
-        button.pack(anchor="w") 
-    elif (item[0]=="TEACHERS"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
-        button.pack(anchor="w") 
-    # Add the button to the list
+    button = tk.Button(sidebar, text=item[0], compound=tk.LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",
+                       command=lambda page=item[0]: handle_click(page))
+    button.pack(anchor="w")
     buttons.append(button)
-    # Pack the button to the sidebar
-    button.pack(fill=X)
 
 # Create a top bar frame
-topbar = Frame(root, bg="#C1BBEB", width=600, height=50)
-topbar.pack(side=TOP, fill=X)
+topbar = tk.Frame(root, bg="#C1BBEB", width=800, height=50)
+topbar.pack(side=tk.TOP, fill=tk.X)
 
 # Create a label for the title
-title = Label(topbar, text="Activity", font=("Arial", 20, "bold"), bg="#C1BBEB", fg="#4a148c")
-title.pack(side=LEFT, padx=20, pady=10)
+title = tk.Label(topbar, text="Activity", font=("Arial", 20, "bold"), bg="#C1BBEB", fg="#4a148c")
+title.pack(side=tk.LEFT, padx=20, pady=10)
 
 # Create a label for the user icon
-user_icon_image = PhotoImage(file="Images/settings_icon.png").subsample(2)
-user_icon = Label(topbar, image=user_icon_image, bg="#C1BBEB")
-user_icon.pack(side=RIGHT, padx=10, pady=10)
+user_icon_image = tk.PhotoImage(file="Images/settings_icon.png").subsample(2)
+user_icon = tk.Label(topbar, image=user_icon_image, bg="#C1BBEB")
+user_icon.pack(side=tk.RIGHT, padx=10, pady=10)
 
 # Create a label for the user name
-user_name = Label(topbar, text="Vineeta M.", font=("Arial", 16), bg="#C1BBEB", fg="#4a148c")
-user_name.pack(side=RIGHT, pady=10)
+user_name = tk.Label(topbar, text="Vineeta M.", font=("Arial", 16), bg="#C1BBEB", fg="#4a148c")
+user_name.pack(side=tk.RIGHT, pady=10)
 
 # Create a frame for the main section
-main_section = Frame(root, bg="white", width=600, height=500)
-main_section.pack(side=TOP, fill=BOTH, expand=True)
-
-
+main_section = tk.Frame(root, bg="white", width=800, height=500)
+main_section.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 # Add labels for day, date, and time
 current_time = time.strftime("%H:%M:%S")
 current_date = time.strftime("%A, %B %d, %Y")
-day_date_time_label = Label(main_section, text=f"Day: {current_date}", font=("Arial", 14), bg="white")
+day_date_time_label = tk.Label(main_section, text=f"Day: {current_date}", font=("Arial", 14), bg="white")
 day_date_time_label.pack(pady=(20, 10))
 
 # Example Notifications
-timeline_frame = Frame(main_section, bg="#C1BBEB", width=0)
-timeline_frame.pack(side=LEFT, fill=Y)
+timeline_frame = tk.Frame(main_section, bg="#C1BBEB", width=150)
+timeline_frame.pack(side=tk.LEFT, fill=tk.Y)
 
-canvas = Canvas(main_section, bg="white", width=550, height=500)
-canvas.pack(side=LEFT, fill=BOTH, expand=True)
+canvas = tk.Canvas(main_section, bg="white", width=600, height=500)
+canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
 # Draw vertical line for the day
 canvas.create_line(80, 0, 80, 500, fill="#C1BBEB", width=2)
@@ -139,6 +97,42 @@ for idx, notification in enumerate(notifications, start=1):
     canvas.create_text(100, y, text=f"{notification['faculty']}:\n{notification['message']}", font=("Arial", 12), anchor="w")
     y_offset += 40
 
+# Right Section for adding latest notification
+right_section = tk.Frame(main_section, bg="white", width=200, height=500)
+right_section.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+# Function to handle sending notification
+def send_notification():
+    # Fetch data from input fields
+    time_value = time_entry.get()
+    day_value = day_entry.get()
+    date_value = date_entry.get()
+    message_value = message_entry.get("1.0", tk.END)  # Get message from text widget
+
+    # Insert data into database
+    cursor.execute("INSERT INTO notifications (time, day, date, message) VALUES (?, ?, ?, ?)", (time_value, day_value, date_value, message_value))
+    conn.commit()
+    print("Notification sent successfully!")  # Debug Message
+
+# Labels and entry widgets for time, day, date, and message
+tk.Label(right_section, text="Time:", font=("Arial", 12), bg="white").pack(pady=(20, 5))
+time_entry = tk.Entry(right_section, font=("Arial", 12), bg="white")
+time_entry.pack(pady=5)
+
+tk.Label(right_section, text="Day:", font=("Arial", 12), bg="white").pack(pady=5)
+day_entry = tk.Entry(right_section, font=("Arial", 12), bg="white")
+day_entry.pack(pady=5)
+
+tk.Label(right_section, text="Date:", font=("Arial", 12), bg="white").pack(pady=5)
+date_entry = tk.Entry(right_section, font=("Arial", 12), bg="white")
+date_entry.pack(pady=5)
+
+tk.Label(right_section, text="Message:", font=("Arial", 12), bg="white").pack(pady=5)
+message_entry = tk.Text(right_section, font=("Arial", 12), bg="white", height=5)
+message_entry.pack(pady=5)
+
+# Button to send notification
+send_button = tk.Button(right_section, text="Send", font=("Arial", 12), bg="#4a148c", fg="white", bd=0, command=send_notification)
+send_button.pack(pady=20)
+
 root.mainloop()
-
-
