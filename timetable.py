@@ -80,17 +80,18 @@ def load_timetable(subjects):
     # subjects = []
 
     # Create a variable to keep track of the current subject index
-    subject_index = 0
+    # subject_index = 0
+    subject_index = random.randint(0, len(subjects))
 
     # Loop through the days and create labels
     for day in days:
         # Create a label for the day
         day_label = Label(calendar, text=day, font=("Arial", 12, "bold"), bg="#C1BBEB", fg="#3a3a3a")
-        day_label.grid(row=0, column=days.index(day), padx=5, pady=5)
+        day_label.grid(row=0, column=days.index(day), padx=20, pady=5)
 
         # Create a frame for the time slots
         time_frame = Frame(calendar, bg="#C1BBEB")
-        time_frame.grid(row=1, column=days.index(day), padx=5, pady=5)
+        time_frame.grid(row=1, column=days.index(day), padx=20, pady=5)
 
         # Create a list of time slots for the day
         time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
@@ -205,7 +206,7 @@ for item in menu_items:
     button.pack(fill=X)
 
 # Create a top bar frame
-topbar = Frame(root, bg="#C1BBEB", width=600, height=50)
+topbar = Frame(root, bg="#C1BBEB", width=600, height=30)
 topbar.pack(side=TOP, fill=X)
 
 # Create a label for the title
@@ -225,9 +226,18 @@ user_name.pack(side=RIGHT, pady=10)
 content = Frame(root, bg="#C1BBEB", width=600, height=550)
 content.pack(side=TOP, fill=BOTH, expand=True)
 
+class_1_button = Button(content, text="D10A", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
+class_1_button.pack(side=TOP, padx=25, pady=10, anchor="w")
+
+class_2_button = Button(content, text="D10B", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
+class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth() + 41, y=class_1_button.winfo_y()+10)
+
+class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
+class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth() + 115, y=class_2_button.winfo_y()+10)
+
 # Create a calendar frame
 calendar = Frame(content, bg="#C1BBEB", width=550, height=500)
-calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=20, pady=20)
+calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
 
 load_timetable([])
 
