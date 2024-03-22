@@ -68,11 +68,9 @@ def activity() :
     root.destroy()
     subprocess.run(["python","notifications.py"])
 
-def load_timetable(subjects):
+def timetable_frame(subjects):
     
-    if (len(subjects) < 5 and len(subjects) > 0):
-        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
-        return ValueError
+    save_data.clear()
 
     # Create a list of days for the calendar
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -113,7 +111,7 @@ def load_timetable(subjects):
                 subject_frame.pack(side=TOP, fill=X, padx=10, pady=10)
 
                 
-                data = []  
+                data =[]  
                 if subjects != []:
                     if ((subject_index >= len(subjects)) and subjects != []):
                         subject_index = random.randint(0, len(subjects) - 1)
@@ -127,6 +125,7 @@ def load_timetable(subjects):
                     subject_name = Label(subject_frame, text=subject[0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
                     subject_name.pack(side=TOP, anchor=W, padx=0, pady=0)
                     
+
 
                     # Create a label for the teacher name
                     teacher_name = Label(subject_frame, text=subject[1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
@@ -150,6 +149,7 @@ def load_timetable(subjects):
             subject_index = random.randint(0, len(subjects) - 1)    
 
 
+
 def save_details():
     
     for i in range(0,len(save_data)):
@@ -160,7 +160,9 @@ def save_details():
     print(cursor.fetchall(),"fettching from db")
     
 
-def fill_timetable():
+def fill_timetable_A():
+
+    
     
     cursor.execute("SELECT * FROM teacher")
     data = cursor.fetchall()
@@ -173,10 +175,44 @@ def fill_timetable():
 
         formatted_data.append((teacher_fullname, subject_fullname))
     
-    print(formatted_data)
+    # print(formatted_data_A)
+    # print(formatted_data_B)
 
-    load_timetable(subjects=formatted_data)
+    if (len(formatted_data) < 5 and len(formatted_data) > 0):
+        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+        return ValueError
+
+    # load_timetable(subjects=formatted_data)
+    timetable_frame(subjects=formatted_data)
+
+    if (len(formatted_data) == 0):
+        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+        return ValueError
+    # load_timetable(subjects=subjects)
+def fill_timetable_B():
+
     
+
+
+
+    formatted_data = []
+
+    for i in data:
+        teacher_fullname = i[1] + " " + i[2]
+        subject_fullname = i[3]
+
+        formatted_data.append((teacher_fullname, subject_fullname))
+    
+    # print(formatted_data_A)
+    # print(formatted_data_B)
+
+    if (len(formatted_data) < 5 and len(formatted_data) > 0):
+        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+        return ValueError
+
+    # load_timetable(subjects=formatted_data)
+    timetable_frame(subjects=formatted_data)
+
     if (len(formatted_data) == 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
@@ -239,10 +275,11 @@ class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth(
 calendar = Frame(content, bg="#C1BBEB", width=550, height=500)
 calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
 
-load_timetable([])
+# load_timetable([])
+timetable_frame([])
 
 # Create a generate button
-generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
+generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10,command=fill_timetable_A)
 generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
 
 
