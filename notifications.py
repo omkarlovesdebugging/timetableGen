@@ -120,14 +120,14 @@ main_section.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 current_time = datetime.now().strftime("%H:%M:%S")
 current_date = datetime.now().strftime("%A, %B %d, %Y")
 
-day_date_time_label = tk.Label(main_section, text=f"Day: {current_date} - Time: {current_time}", font=("Arial", 14), bg="white")
+day_date_time_label = tk.Label(main_section, text=f"Day: {current_date} - Time: {current_time}", font=("Arial", 14), bg="#C1BBEB", fg="#4a148c")
 day_date_time_label.pack(pady=(20, 10))
 
 # Example Notifications
 timeline_frame = tk.Frame(main_section, bg="#C1BBEB", width=150)
 timeline_frame.pack(side=tk.LEFT, fill=tk.Y)
 
-canvas = tk.Canvas(main_section, bg="#C1BBEB", width=600, height=500)
+canvas = tk.Canvas(main_section, bg="#C1BBEB", width=600, height=500, highlightbackground="white", highlightthickness=2)
 canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
 #
@@ -191,13 +191,13 @@ def send_notification():
     print("Done!")  # Debug Message
 
 # Label and text widget for message
-tk.Label(right_section, text="Message*", font=("Arial", 12, "bold"), bg="#C1BBEB", fg="#4a148c").pack(pady=5)
+tk.Label(right_section, text="*Message:", font=("Arial", 12), bg="#C1BBEB", fg="#4a148c").pack(pady=5)
 message_entry = tk.Text(right_section, font=("Arial", 12), bg="#C1BBEB", height=5)
 message_entry.pack(pady=5)
 
 # Button to send notification
-send_button = tk.Button(right_section, text="Send", font=("Arial", 12), bg="#4a148c", fg="white", bd=0, command=send_notification)
-send_button.pack(pady=20)
+send_button = tk.Button(right_section, text="SEND", font=("Arial",10, "bold"), bg="#4a148c", fg="white", bd=0,width=6,height=1, command=send_notification)
+send_button.pack(padx=10, pady=10)
 
 
 root.mainloop()
