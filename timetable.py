@@ -230,7 +230,7 @@ def fill_timetable_B():
 
                         formatted_data_B.append((teacher_fullname, subject_fullname, room))
     
-                        data=[formatted_data_B[0][0],formatted_data_B[0][1],formatted_data_B[0][2], day, slot]
+                        data=[formatted_data_B[-1][0],formatted_data_B[-1][1],formatted_data_B[-1][2], day, slot]
                         save_data.append(data)
                         break
                 
@@ -243,7 +243,76 @@ def fill_timetable_B():
         return ValueError
 
     # load_timetable(subjects=formatted_data)
-    timetable_frame(subjects=formatted_data_B)
+    for i in range(0, len(save_data)):
+        cursor.execute("INSERT INTO timetable_B (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        conn.commit()
+
+    timetable_frame(subjects=save_data)
+
+
+def fill_timetable_C():
+    save_data.clear()
+
+    cursor.execute("SELECT * FROM teacher")
+    teachers_data = cursor.fetchall()
+
+    cursor.execute('select *  from timetable')
+    tt_of_A = cursor.fetchall()
+
+    cursor.execute('select *  from timetable_B')
+    tt_of_B = cursor.fetchall()
+
+    # print(tt_of_A)
+    print(tt_of_B)
+
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+
+    formatted_data_C = []
+
+    for day in days:
+        for slot in time_slots:
+            if slot != "BREAK":
+
+                random.shuffle(teachers_data)
+                needed_data_A=()
+                needed_data_B=()
+                for j in tt_of_A:
+                    if (j[3] == day and j[4] == slot):
+                        needed_data_A = j 
+                
+                for k in tt_of_B:
+                    if (k[3] == day and k[4] == slot):
+                        needed_data_B = k 
+
+                for i in teachers_data:
+                    if ((i[1] + " " + i[2]) != needed_data_A[0] and (i[1] + " " + i[2]) != needed_data_B[0] and i[3] != needed_data_A[1] and i[3] != needed_data_B[1]):
+                        teacher_fullname = i[1] + " " + i[2]
+                        subject_fullname = i[3]
+                        room="512"
+
+                        formatted_data_C.append((teacher_fullname, subject_fullname, room))
+    
+                        data=[formatted_data_C[-1][0],formatted_data_C[-1][1],formatted_data_C[-1][2], day, slot]
+                        save_data.append(data)
+                        break
+                
+    
+    # print(formatted_data_A)
+    # print(formatted_data_B)
+
+    if (len(formatted_data_C) < 5 and len(formatted_data_C) > 0):
+        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+        return ValueError
+
+        
+    for i in range(0, len(save_data)):
+        cursor.execute("INSERT INTO timetable_C (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        conn.commit()
+
+    # load_timetable(subjects=formatted_data)
+    timetable_frame(subjects=save_data)
+
 
 
 # Loop through the menu items and create buttons
@@ -296,7 +365,7 @@ class_1_button.pack(side=TOP, padx=25, pady=10, anchor="w")
 class_2_button = Button(content, text="D10B", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_B)
 class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth() + 41, y=class_1_button.winfo_y()+10)
 
-class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
+class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_C)
 class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth() + 115, y=class_2_button.winfo_y()+10)
 
 # Create a calendar frame
