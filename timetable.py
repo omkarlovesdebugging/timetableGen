@@ -70,7 +70,6 @@ def activity() :
 
 def timetable_frame(subjects):
     
-    save_data.clear()
 
     # Create a list of days for the calendar
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -78,8 +77,8 @@ def timetable_frame(subjects):
     # subjects = []
 
     # Create a variable to keep track of the current subject index
-    # subject_index = 0
-    subject_index = random.randint(0, len(subjects))
+    subject_index = 0
+    # subject_index = random.randint(0, len(subjects))
 
     # Loop through the days and create labels
     for day in days:
@@ -94,8 +93,10 @@ def timetable_frame(subjects):
         # Create a list of time slots for the day
         time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
         
+
         # Loop through the time slots and create labels
         for slot in time_slots:
+
             # Create a label for the time slot
             slot_label = Label(time_frame, text=slot, font=("Arial", 8), bg="#C1BBEB", fg="#3a3a3a")
             
@@ -113,110 +114,137 @@ def timetable_frame(subjects):
                 
                 data =[]  
                 if subjects != []:
-                    if ((subject_index >= len(subjects)) and subjects != []):
-                        subject_index = random.randint(0, len(subjects) - 1)
-                    # Get the current subject from the list
-                    subject = subjects[subject_index]
+                    # if ((subject_index >= len(subjects)) and subjects != []):
+                    #     subject_index = random.randint(0, len(subjects) - 1)
+                    # # Get the current subject from the list
+                    # subject = subjects[subject_index]
                     
-                    # Increment the subject index
-                    subject_index += 1
+                    # # Increment the subject index
+                    # subject_index += 1
 
                     # Create a label for the subject name
-                    subject_name = Label(subject_frame, text=subject[0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
+                    subject_name = Label(subject_frame, text=subjects[subject_index][0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
                     subject_name.pack(side=TOP, anchor=W, padx=0, pady=0)
                     
 
 
                     # Create a label for the teacher name
-                    teacher_name = Label(subject_frame, text=subject[1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    teacher_name = Label(subject_frame, text=subjects[subject_index][1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
                     
 
-                    room=rooms[random.randint(0, len(rooms) - 1)]
                     # Create a label for the room number
-                    room_number = Label(subject_frame, text=room, font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    room_number = Label(subject_frame, text=subjects[subject_index][2], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
                     room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
                     
-
-                    data=[subject[0],subject[1],room]
+                    subject_index += 1
                     
-                    save_data.append(data)
 
                     
 
         # subject_index = 0
-        if ((subject_index >= len(subjects)) and subjects != []):
-            subject_index = random.randint(0, len(subjects) - 1)    
+        # if ((subject_index >= len(subjects)) and subjects != []):
+        #     subject_index = random.randint(0, len(subjects) - 1)    
 
 
 
 def save_details():
     
     for i in range(0,len(save_data)):
-        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number) VALUES ( ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2] ))
+        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
     
     cursor.execute('select *  from timetable')
-    print(cursor.fetchall(),"fettching from db")
+    print(cursor.fetchall())
     
 
 def fill_timetable_A():
 
-    
-    
     cursor.execute("SELECT * FROM teacher")
     data = cursor.fetchall()
 
-    formatted_data = []
+    formatted_data_A = []
 
     for i in data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
+        room="514"
 
-        formatted_data.append((teacher_fullname, subject_fullname))
+        formatted_data_A.append((teacher_fullname, subject_fullname,room))
     
-    # print(formatted_data_A)
     # print(formatted_data_B)
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
-    if (len(formatted_data) < 5 and len(formatted_data) > 0):
+    for day in days:
+        for slot in time_slots:
+            if slot != "BREAK":
+                random.shuffle(formatted_data_A)
+
+                data=[formatted_data_A[0][0],formatted_data_A[0][1],formatted_data_A[0][2], day, slot]
+                # save_data.clear()
+                save_data.append(data)
+
+
+
+    if (len(formatted_data_A) < 5 and len(formatted_data_A) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
 
-    # load_timetable(subjects=formatted_data)
-    timetable_frame(subjects=formatted_data)
+    print(save_data)
 
-    if (len(formatted_data) == 0):
-        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
-        return ValueError
-    # load_timetable(subjects=subjects)
+    # load_timetable(subjects=formatted_data_A)
+    timetable_frame(subjects=save_data)
+
+
 def fill_timetable_B():
+    save_data.clear()
 
+    cursor.execute("SELECT * FROM teacher")
+    teachers_data = cursor.fetchall()
+
+    cursor.execute('select *  from timetable')
+    tt_of_A = cursor.fetchall()
+    print(tt_of_A)
+
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+
+    formatted_data_B = []
+
+    for day in days:
+        for slot in time_slots:
+            if slot != "BREAK":
+
+                random.shuffle(teachers_data)
+                needed_data=()
+                for j in tt_of_A:
+                    if (j[3] == day and j[4] == slot):
+                        needed_data = j 
+
+                for i in teachers_data:
+                    if ((i[1] + " " + i[2]) != needed_data[0] and i[3] != needed_data[1]):
+                        teacher_fullname = i[1] + " " + i[2]
+                        subject_fullname = i[3]
+                        room="512"
+
+                        formatted_data_B.append((teacher_fullname, subject_fullname, room))
     
-
-
-
-    formatted_data = []
-
-    for i in data:
-        teacher_fullname = i[1] + " " + i[2]
-        subject_fullname = i[3]
-
-        formatted_data.append((teacher_fullname, subject_fullname))
+                        data=[formatted_data_B[0][0],formatted_data_B[0][1],formatted_data_B[0][2], day, slot]
+                        save_data.append(data)
+                        break
+                
     
     # print(formatted_data_A)
     # print(formatted_data_B)
 
-    if (len(formatted_data) < 5 and len(formatted_data) > 0):
+    if (len(formatted_data_B) < 5 and len(formatted_data_B) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
 
     # load_timetable(subjects=formatted_data)
-    timetable_frame(subjects=formatted_data)
+    timetable_frame(subjects=formatted_data_B)
 
-    if (len(formatted_data) == 0):
-        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
-        return ValueError
-    # load_timetable(subjects=subjects)
 
 # Loop through the menu items and create buttons
 for item in menu_items:
@@ -265,7 +293,7 @@ content.pack(side=TOP, fill=BOTH, expand=True)
 class_1_button = Button(content, text="D10A", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
 class_1_button.pack(side=TOP, padx=25, pady=10, anchor="w")
 
-class_2_button = Button(content, text="D10B", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
+class_2_button = Button(content, text="D10B", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_B)
 class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth() + 41, y=class_1_button.winfo_y()+10)
 
 class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
