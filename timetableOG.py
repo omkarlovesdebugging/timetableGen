@@ -15,6 +15,8 @@ c=0
 a=0    
 save_data_B = []   
 b=0 
+e=0
+save_data_C=[]
 # Set the title and icon of the window
 root.title("Timetable")
 
@@ -47,6 +49,7 @@ cursor.execute("select * from teacher")
 db_teachers=cursor.fetchall()
 for teacher in db_teachers:
     Compare.append(teacher[1]+" "+teacher[2])
+
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
@@ -95,6 +98,7 @@ def insert_data(subject_frame,subject,room):
     room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
 
 def load_timetableA(subjects):
+    show_focusA(e)
     global a
     a=a+1
     save_data.clear()
@@ -162,8 +166,6 @@ def load_timetableA(subjects):
         # subject_index = 0
         if ((subject_index >= len(subjects)) and subjects != []):
             subject_index = random.randint(0, len(subjects) - 1)   
-
-
 def load_timetableB(subjects):
     global b
     if b==0:
@@ -229,6 +231,67 @@ def load_timetableB(subjects):
         # subject_index = 0
         if ((subject_index >= len(subjects)) and subjects != []):
             subject_index = random.randint(0, len(subjects) - 1)    
+def load_timetableC(subjects):
+    # Create a list of days for the calendar
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    
+
+    # Create a variable to keep track of the current subject index
+    subject_index = 0
+
+    # Loop through the days and create labels
+    for day in days:
+        # Create a label for the day
+        day_label = Label(calendar, text=day, font=("Arial", 12, "bold"), bg="#C1BBEB", fg="#3a3a3a")
+        day_label.grid(row=0, column=days.index(day), padx=20, pady=5)
+
+        # Create a frame for the time slots
+        time_frame = Frame(calendar, bg="#C1BBEB")
+        time_frame.grid(row=1, column=days.index(day), padx=20, pady=5)
+
+        # Create a list of time slots for the day
+        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+        
+        # Loop through the time slots and create labels
+        for slot in time_slots:
+            # Create a label for the time slot
+            slot_label = Label(time_frame, text=slot, font=("Arial", 8), bg="#C1BBEB", fg="#3a3a3a")
+            
+            # Pack the label to the time frame
+            slot_label.pack(side=TOP, anchor=W)
+
+            # Check if the time slot is not a break
+            if slot != "BREAK":
+
+                # Create a frame for the subject details
+                subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=10, highlightbackground="#A098AE", highlightthickness=2)
+                subject_frame.pack_propagate(1)
+                subject_frame.pack(side=TOP, fill=X, padx=10, pady=10)
+
+                
+                data = []  
+                if subjects != []:
+                    # Get the current subject from the list
+                    # print(subject_index)
+                    subject = subjects[subject_index]
+                    
+                    # Increment the subject index
+                    subject_index += 1
+                    insert_data(subject_frame,subject,512)
+                    # Create a label for the subject name
+                    data=[subject[0],subject[1],512]
+                    if len(save_data_C)>=25:
+                        pass
+                    else:
+                        save_data_C.append(data)
+    
+
+                    
+
+        # subject_index = 0
+        if ((subject_index >= len(subjects)) and subjects != []):
+            subject_index = random.randint(0, len(subjects) - 1)    
+
 def show_timetable_a(subjects):
     
     # Create a list of days for the calendar
@@ -300,7 +363,6 @@ def save_details():
 def d10A():
     show_timetable_a(save_data)
 def fill_timetableA():
-
     
     cursor.execute("SELECT * FROM teacher")
     data = cursor.fetchall()
@@ -315,8 +377,6 @@ def fill_timetableA():
     
     # print(formatted_data)
     load_timetableA(formatted_data)
-
-
 def fill_timetableB():
     cursor.execute("SELECT * FROM teacher")
     data = cursor.fetchall()
@@ -342,14 +402,50 @@ def fill_timetableB():
     c=a
     if save_data_B==[]:
         load_timetableB(Teachers)
-    elif c==d+1:
+    elif c!=d:
         load_timetableB(Teachers)
-    elif c>d+1:
+    elif c<d:
         messagebox.showerror('error',"I dont know?")
     else:
         load_timetableB(save_data_B)
     # print(Teachers)
     
+    if (len(Teachers) == 0):
+        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+        return ValueError
+def fill_timetableC():
+    cursor.execute("SELECT * FROM teacher")
+    data = cursor.fetchall()
+    Teachers=[]
+    for i in range(0,25):
+        count=0
+        random.shuffle(Compare)
+        for j in range (0,5):
+            # print(save_data[i][0]+"-"+Compare[j])
+            if (save_data[i][0]!=Compare[j])and(save_data_B[i][0] != Compare[j])and  count==0:
+                # print(Compare[j],end="-")
+                for k in range(0,len(save_data)):
+                    if (save_data[k][0]==Compare[j])and count==0:
+                        # print(save_data[k])
+                        Teachers.append(save_data[k])
+                        # print(i)
+                        # print(save_data[k])
+                        count=count+1
+                count=count+1
+    print('The length of Teachers is ',len(Teachers))
+    global c
+    d=c
+    c=a
+    if save_data_C==[]:
+        load_timetableC(Teachers)
+    elif c!=d:
+        load_timetableC(Teachers)
+    elif c<d:
+        messagebox.showerror('error',"I dont know?")
+    else:
+        load_timetableC(save_data_C)
+    # print(Teachers)
+    # load_timetableC(Teachers)
     if (len(Teachers) == 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
@@ -399,30 +495,62 @@ user_name.pack(side=RIGHT, pady=10)
 content = Frame(root, bg="#C1BBEB", width=600, height=550)
 content.pack(side=TOP, fill=BOTH, expand=True)
 
-selected_button = None
-def on_button_click(button):
-    global selected_button
-    if selected_button:
-        selected_button.config(background="SystemButtonFace")
-    button.config(relief="sunken")
-    selected_button = button
 
-class_1_button = Button(content,borderwidth=2, text="D10A", font=("Arial", 10), bg="#C1BBEB", fg="white", bd=0, padx=10, pady=5,command=d10A)
+class_1_button = Button(content,borderwidth=2, text="D10A", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5,command=d10A)
 class_1_button.pack(side=TOP, padx=25, pady=10, anchor="w")
-
 
 
 class_2_button = Button(content, text="D10B", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5,command=fill_timetableB)
 class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth() + 41, y=class_1_button.winfo_y()+10)
 
 
-class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
+class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5,command=fill_timetableC)
 class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth() + 115, y=class_2_button.winfo_y()+10)
 
 # Binding click events to buttons
-class_1_button.bind("<Button-1>", lambda event: on_button_click(class_1_button))
-class_2_button.bind("<Button-1>", lambda event: on_button_click(class_2_button))
-class_3_button.bind("<Button-1>", lambda event: on_button_click(class_3_button))
+def show_focusA(event):
+    class_1_button.config(
+        bg='#C1BBEB',
+        fg="black",
+        highlightbackground="#4a148c"
+    )
+    class_2_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_3_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+def show_focusB(event):
+    class_2_button.config(
+        bg='#C1BBEB',
+        fg="black"
+    )
+    class_1_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_3_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+def show_focusC(event):
+    class_3_button.config(
+        bg='#C1BBEB',
+        fg="black"
+    )
+    class_2_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_1_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+class_1_button.bind('<Button>',show_focusA)
+class_2_button.bind('<Button>',show_focusB)
+class_3_button.bind('<Button>',show_focusC)
 
 
 
