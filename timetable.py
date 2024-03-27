@@ -6,7 +6,6 @@ from assets import subjects, rooms
 import random
 import sqlite3
 
-
 # Create a root window
 root = Tk()
  
@@ -149,16 +148,32 @@ def timetable_frame(subjects):
 
 
 def save_details():
-    
-    for i in range(0,len(save_data)):
-        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
-        conn.commit()
-    
-    cursor.execute('select *  from timetable')
-    print(cursor.fetchall())
-    
+    cursor.execute("SELECT * FROM timetable")
+    data_a=cursor.fetchall()
 
-def fill_timetable_A():
+    cursor.execute("SELECT * FROM timetable_B")
+    data_b=cursor.fetchall()
+
+    cursor.execute("SELECT * FROM timetable_C")
+    data_c=cursor.fetchall()
+
+    if (data_a == [] or data_b == [] or data_c == []):
+        msg = messagebox.showerror("ERROR","Please generate a TT for all the classes first") 
+        return ValueError
+
+    with open("TIMETABLE_GEN.txt", "w") as file:
+        file.write("TIMETABLE GENERATOR\n")
+        file.write("\nD10A:\n")
+        file.write(f"{data_a}\n")
+        file.write("\nD10B:\n")
+        file.write(f"{data_b}\n")
+        file.write("\nD10C:\n")
+        file.write(f"{data_c}\n")
+
+    
+    
+def fill_random_tt():
+    show_focusA(event=None)
 
     cursor.execute("SELECT * FROM teacher")
     data = cursor.fetchall()
@@ -175,6 +190,8 @@ def fill_timetable_A():
     # print(formatted_data_B)
     time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    
+    save_data.clear()
 
     for day in days:
         for slot in time_slots:
@@ -191,14 +208,41 @@ def fill_timetable_A():
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
 
-    print(save_data)
+    cursor.execute("""delete from timetable""")
+    conn.commit()
+
+    cursor.execute("""delete from timetable_B""")
+    conn.commit()
+
+    cursor.execute("""delete from timetable_C""")
+    conn.commit()
+
+    for i in range(0,len(save_data)):
+        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        conn.commit()
 
     # load_timetable(subjects=formatted_data_A)
     timetable_frame(subjects=save_data)
 
 
+def fill_timetable_A():
+    show_focusA(event=None)
+
+    cursor.execute("SELECT * FROM timetable")
+    data=cursor.fetchall()
+    if data != []:
+        timetable_frame(subjects=data)
+        return
+
+
 def fill_timetable_B():
     save_data.clear()
+    
+    cursor.execute("SELECT * FROM timetable_B")
+    data=cursor.fetchall()
+    if data != []:
+        timetable_frame(subjects=data)
+        return
 
     cursor.execute("SELECT * FROM teacher")
     teachers_data = cursor.fetchall()
@@ -252,6 +296,12 @@ def fill_timetable_B():
 
 def fill_timetable_C():
     save_data.clear()
+
+    cursor.execute("SELECT * FROM timetable_C")
+    data=cursor.fetchall()
+    if data != []:
+        timetable_frame(subjects=data)
+        return
 
     cursor.execute("SELECT * FROM teacher")
     teachers_data = cursor.fetchall()
@@ -359,7 +409,7 @@ user_name.pack(side=RIGHT, pady=10)
 content = Frame(root, bg="#C1BBEB", width=600, height=550)
 content.pack(side=TOP, fill=BOTH, expand=True)
 
-class_1_button = Button(content, text="D10A", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5)
+class_1_button = Button(content, text="D10A", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_A)
 class_1_button.pack(side=TOP, padx=25, pady=10, anchor="w")
 
 class_2_button = Button(content, text="D10B", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_B)
@@ -367,6 +417,53 @@ class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth(
 
 class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_C)
 class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth() + 115, y=class_2_button.winfo_y()+10)
+
+# Binding click events to buttons
+def show_focusA(event):
+    class_1_button.config(
+        bg='#C1BBEB',
+        fg="#4a148c",
+        highlightbackground="#4a148c"
+    )
+    class_2_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_3_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+def show_focusB(event):
+    class_2_button.config(
+        bg='#C1BBEB',
+        fg="#4a148c"
+    )
+    class_1_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_3_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+def show_focusC(event):
+    class_3_button.config(
+        bg='#C1BBEB',
+        fg="#4a148c"
+    )
+    class_2_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_1_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+class_1_button.bind('<Button>',show_focusA)
+class_2_button.bind('<Button>',show_focusB)
+class_3_button.bind('<Button>',show_focusC)
+
+show_focusA(event=None)
 
 # Create a calendar frame
 calendar = Frame(content, bg="#C1BBEB", width=550, height=500)
@@ -376,7 +473,7 @@ calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
 timetable_frame([])
 
 # Create a generate button
-generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10,command=fill_timetable_A)
+generate_button = Button(content, text="+", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10,command=fill_random_tt)
 generate_button.pack(side=RIGHT, anchor=NE, padx=20, pady=20)
 
 
