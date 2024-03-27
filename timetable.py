@@ -164,11 +164,14 @@ def save_details():
     with open("TIMETABLE_GEN.txt", "w") as file:
         file.write("TIMETABLE GENERATOR\n")
         file.write("\nD10A:\n")
-        file.write(f"{data_a}\n")
+        for i in data_a:
+            file.write(f"{i}\n")
         file.write("\nD10B:\n")
-        file.write(f"{data_b}\n")
+        for j in data_b:
+            file.write(f"{j}\n")
         file.write("\nD10C:\n")
-        file.write(f"{data_c}\n")
+        for k in data_c:
+            file.write(f"{k}\n")
 
     
     
