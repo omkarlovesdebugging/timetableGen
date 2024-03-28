@@ -16,13 +16,13 @@ c = conn.cursor()
 #     time_slot TEXT )
 # """)
 
-c.execute("""delete from timetable""")
+c.execute("""select * from timetable""")
 conn.commit()
 
-c.execute("""delete from timetable_B""")
+c.execute("""select * from timetable_B""")
 conn.commit()
 
-c.execute("""delete from timetable_C""")
+c.execute("""select * from timetable_C""")
 conn.commit()
 
 

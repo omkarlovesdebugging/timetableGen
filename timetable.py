@@ -5,6 +5,11 @@ from tkinter import ttk, messagebox
 from assets import subjects, rooms
 import random
 import sqlite3
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
 
 # Create a root window
 root = Tk()
@@ -147,6 +152,68 @@ def timetable_frame(subjects):
 
 
 
+def generate_pdf_from_database(data_a,data_b,data_c):
+    pdf_filename = "TIMETABLEGEN_OUTPUT.pdf"
+    
+    doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
+    elements = []
+    i=0
+    # Add data to the PDF
+    table_data_a = []
+    table_data_a.append(["TEACHER","SUBJECT","ROOM","DAY","TIME-SLOT"])
+    for row in data_a:
+        table_data_a.append(row)
+
+    # Create table
+    table_a = Table(table_data_a)
+
+    # Add style to the table
+    style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Courier-Bold'),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+    table_a.setStyle(style)
+
+    styles = getSampleStyleSheet()
+    style_heading = styles['Heading1']
+    elements.append(Paragraph("D10A", style_heading))
+    
+    
+    # Add table to elements
+    elements.append(table_a)
+    elements.append(PageBreak())
+    
+    # Add data to the PDF
+    table_data_b = []
+    table_data_b.append(["TEACHER","SUBJECT","ROOM","DAY","TIME-SLOT"])
+    for row in data_b:    
+        table_data_b.append(row)
+
+    table_b = Table(table_data_b)
+    table_b.setStyle(style)
+
+    elements.append(Paragraph("D10B", style_heading))
+    elements.append(table_b)   
+
+    elements.append(PageBreak())
+
+    table_data_c = []
+    table_data_c.append(["TEACHER","SUBJECT","ROOM","DAY","TIME-SLOT"])
+    for row in data_c:    
+        table_data_c.append(row)
+
+    table_c = Table(table_data_c)
+    table_c.setStyle(style)
+
+    elements.append(Paragraph("D10C", style_heading))
+    elements.append(table_c)   
+    elements.append(PageBreak()) 
+    # Build PDF
+    doc.build(elements)
+
 def save_details():
     cursor.execute("SELECT * FROM timetable")
     data_a=cursor.fetchall()
@@ -156,22 +223,25 @@ def save_details():
 
     cursor.execute("SELECT * FROM timetable_C")
     data_c=cursor.fetchall()
+    # Create a PDF document
+    generate_pdf_from_database(data_a,data_b,data_c)
+
 
     if (data_a == [] or data_b == [] or data_c == []):
         msg = messagebox.showerror("ERROR","Please generate a TT for all the classes first") 
         return ValueError
 
-    with open("TIMETABLE_GEN.txt", "w") as file:
-        file.write("TIMETABLE GENERATOR\n")
-        file.write("\nD10A:\n")
-        for i in data_a:
-            file.write(f"{i}\n")
-        file.write("\nD10B:\n")
-        for j in data_b:
-            file.write(f"{j}\n")
-        file.write("\nD10C:\n")
-        for k in data_c:
-            file.write(f"{k}\n")
+    # with open("TIMETABLE_GEN.txt", "w") as file:
+    #     file.write("TIMETABLE GENERATOR\n")
+    #     file.write("\nD10A:\n")
+    #     for i in data_a:
+    #         file.write(f"{i}\n")
+    #     file.write("\nD10B:\n")
+    #     for j in data_b:
+    #         file.write(f"{j}\n")
+    #     file.write("\nD10C:\n")
+    #     for k in data_c:
+    #         file.write(f"{k}\n")
 
     
     
