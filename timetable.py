@@ -246,6 +246,7 @@ def save_details():
     
     
 def fill_random_tt():
+    save_data.clear()
     show_focusA(event=None)
 
     cursor.execute("SELECT * FROM teacher")
@@ -258,7 +259,7 @@ def fill_random_tt():
         subject_fullname = i[3]
         room="514"
 
-        formatted_data_A.append((teacher_fullname, subject_fullname,room))
+        formatted_data_A.append([teacher_fullname, subject_fullname, room, 0])
     
     # print(formatted_data_B)
     time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
@@ -266,16 +267,43 @@ def fill_random_tt():
     
     save_data.clear()
 
+    total_free_lecture_count = 0
+    total_nonfree_lecture_count = 0
+
     for day in days:
+        free_lecture_count_per_day = 0
+        non_free_lecture_count_per_day = 0
+
         for slot in time_slots:
             if slot != "BREAK":
                 random.shuffle(formatted_data_A)
-
-                data=[formatted_data_A[0][0],formatted_data_A[0][1],formatted_data_A[0][2], day, slot]
-                # save_data.clear()
-                save_data.append(data)
-
-
+                if (formatted_data_A[0][3] < 3 and non_free_lecture_count_per_day < 4):
+                    data=[formatted_data_A[0][0],formatted_data_A[0][1],formatted_data_A[0][2], day, slot]
+                    formatted_data_A[0][3] += 1
+                    non_free_lecture_count_per_day += 1
+                    total_nonfree_lecture_count += 1
+                    save_data.append(data)
+                elif (free_lecture_count_per_day < 3 or non_free_lecture_count_per_day > 3) and total_free_lecture_count < 10:
+                    data=["Free", "", "", day, slot]
+                    free_lecture_count_per_day += 1
+                    total_free_lecture_count += 1
+                    save_data.append(data)
+                else:
+                    if (total_free_lecture_count < 10):
+                        data=["Free", "", "", day, slot]
+                        free_lecture_count_per_day += 1
+                        total_free_lecture_count += 1
+                        save_data.append(data)
+                    else:
+                        for i in formatted_data_A:
+                            if i[3] < 3:
+                                data=[i[0],i[1],i[2], day, slot]
+                                i[3] += 1
+                                # save_data.clear()
+                                save_data.append(data)
+                                non_free_lecture_count_per_day += 1
+                                total_nonfree_lecture_count += 1
+                                break
 
     if (len(formatted_data_A) < 5 and len(formatted_data_A) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
@@ -303,6 +331,7 @@ def fill_timetable_A():
 
     cursor.execute("SELECT * FROM timetable")
     data=cursor.fetchall()
+
     if data != []:
         timetable_frame(subjects=data)
         return
@@ -313,6 +342,7 @@ def fill_timetable_B():
     
     cursor.execute("SELECT * FROM timetable_B")
     data=cursor.fetchall()
+    
     if data != []:
         timetable_frame(subjects=data)
         return
@@ -322,40 +352,79 @@ def fill_timetable_B():
 
     cursor.execute('select *  from timetable')
     tt_of_A = cursor.fetchall()
-    print(tt_of_A)
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
 
     formatted_data_B = []
 
+    for i in teachers_data:
+        teacher_fullname = i[1] + " " + i[2]
+        subject_fullname = i[3]
+        room="512"
+
+        formatted_data_B.append([teacher_fullname, subject_fullname, room, 0])
+    
+
+    total_free_lecture_count = 0
+    total_nonfree_lecture_count = 0
+
     for day in days:
+        free_lecture_count_per_day = 0
+        non_free_lecture_count_per_day = 0
+
         for slot in time_slots:
             if slot != "BREAK":
-
-                random.shuffle(teachers_data)
+                random.shuffle(formatted_data_B)
                 needed_data=()
                 for j in tt_of_A:
                     if (j[3] == day and j[4] == slot):
                         needed_data = j 
 
-                for i in teachers_data:
-                    if ((i[1] + " " + i[2]) != needed_data[0] and i[3] != needed_data[1]):
-                        teacher_fullname = i[1] + " " + i[2]
-                        subject_fullname = i[3]
-                        room="512"
+                for i in formatted_data_B:
+                    if (i[0] != needed_data[0] and i[1] != needed_data[1]):
+                        if (i[3] < 3 and non_free_lecture_count_per_day < 4):
+                            teacher_fullname = i[0] 
+                            subject_fullname = i[1]
+                            room=i[2]
 
-                        formatted_data_B.append((teacher_fullname, subject_fullname, room))
-    
-                        data=[formatted_data_B[-1][0],formatted_data_B[-1][1],formatted_data_B[-1][2], day, slot]
-                        save_data.append(data)
-                        break
-                
-    
+                            # formatted_data_B.append((teacher_fullname, subject_fullname, room))
+        
+                            data = [teacher_fullname, subject_fullname, room, day, slot]
+                            save_data.append(data)
+                            
+                            i[3] += 1
+                            non_free_lecture_count_per_day += 1
+                            total_nonfree_lecture_count += 1
+                            break   
+                        elif (free_lecture_count_per_day < 3 or non_free_lecture_count_per_day > 3) and total_free_lecture_count < 10:
+                            data=["Free", "", "", day, slot]
+                            free_lecture_count_per_day += 1
+                            total_free_lecture_count += 1
+                            save_data.append(data)
+                            break
+                        else:
+                            if (total_free_lecture_count < 10 and total_nonfree_lecture_count == 15):
+                                data=["Free", "", "", day, slot]
+                                free_lecture_count_per_day += 1
+                                total_free_lecture_count += 1
+                                save_data.append(data)
+                            else:
+                                for i in formatted_data_B:
+                                    if i[3] < 3:
+                                        data=[i[0],i[1],i[2], day, slot]
+                                        i[3] += 1
+                                        # save_data.clear()
+                                        save_data.append(data)
+                                        non_free_lecture_count_per_day += 1
+                                        total_nonfree_lecture_count += 1
+                                        break
+                            break
+                                
     # print(formatted_data_A)
     # print(formatted_data_B)
 
-    if (len(formatted_data_B) < 5 and len(formatted_data_B) > 0):
+    if (len(teachers_data) < 5 and len(teachers_data) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
 
@@ -372,6 +441,7 @@ def fill_timetable_C():
 
     cursor.execute("SELECT * FROM timetable_C")
     data=cursor.fetchall()
+
     if data != []:
         timetable_frame(subjects=data)
         return
@@ -386,14 +456,28 @@ def fill_timetable_C():
     tt_of_B = cursor.fetchall()
 
     # print(tt_of_A)
-    print(tt_of_B)
+    # print(tt_of_B)
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
 
     formatted_data_C = []
 
+    for i in teachers_data:
+        teacher_fullname = i[1] + " " + i[2]
+        subject_fullname = i[3]
+        room="512"
+
+        formatted_data_C.append([teacher_fullname, subject_fullname, room, 0])
+    
+
+    total_free_lecture_count = 0
+    total_nonfree_lecture_count = 0
+
     for day in days:
+        free_lecture_count_per_day = 0
+        non_free_lecture_count_per_day = 0
+
         for slot in time_slots:
             if slot != "BREAK":
 
@@ -408,23 +492,51 @@ def fill_timetable_C():
                     if (k[3] == day and k[4] == slot):
                         needed_data_B = k 
 
-                for i in teachers_data:
-                    if ((i[1] + " " + i[2]) != needed_data_A[0] and (i[1] + " " + i[2]) != needed_data_B[0] and i[3] != needed_data_A[1] and i[3] != needed_data_B[1]):
-                        teacher_fullname = i[1] + " " + i[2]
-                        subject_fullname = i[3]
-                        room="512"
+                for i in formatted_data_C:
+                    print(needed_data_A, needed_data_B)
+                    if ((i[0] != needed_data_A[0] and i[0] != needed_data_B[0]) and (i[1] != needed_data_A[1] and i[1] != needed_data_B[1])):
+                        if (i[3] < 3 and non_free_lecture_count_per_day < 4):
+                            teacher_fullname = i[0] 
+                            subject_fullname = i[1]
+                            room=i[2]
 
-                        formatted_data_C.append((teacher_fullname, subject_fullname, room))
-    
-                        data=[formatted_data_C[-1][0],formatted_data_C[-1][1],formatted_data_C[-1][2], day, slot]
-                        save_data.append(data)
-                        break
-                
+                            # formatted_data_B.append((teacher_fullname, subject_fullname, room))
+        
+                            data = [teacher_fullname, subject_fullname, room, day, slot]
+                            save_data.append(data)
+                            
+                            i[3] += 1
+                            non_free_lecture_count_per_day += 1
+                            total_nonfree_lecture_count += 1
+                            break   
+                        elif (free_lecture_count_per_day < 3 or non_free_lecture_count_per_day > 3) and total_free_lecture_count < 10:
+                            data=["Free", "", "", day, slot]
+                            free_lecture_count_per_day += 1
+                            total_free_lecture_count += 1
+                            save_data.append(data)
+                            break
+                        else:
+                            if (total_free_lecture_count < 10 and total_nonfree_lecture_count == 15):
+                                data=["Free", "", "", day, slot]
+                                free_lecture_count_per_day += 1
+                                total_free_lecture_count += 1
+                                save_data.append(data)
+                            else:
+                                for i in formatted_data_C:
+                                    if i[3] < 3:
+                                        data=[i[0],i[1],i[2], day, slot]
+                                        i[3] += 1
+                                        # save_data.clear()
+                                        save_data.append(data)
+                                        non_free_lecture_count_per_day += 1
+                                        total_nonfree_lecture_count += 1
+                                        break
+                            break      
     
     # print(formatted_data_A)
     # print(formatted_data_B)
 
-    if (len(formatted_data_C) < 5 and len(formatted_data_C) > 0):
+    if (len(teachers_data) < 5 and len(teachers_data) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
 

@@ -1,1 +1,1 @@
-ut
+i[1] != needed_data_A[1] and i[1] != needed_data_B[1]
