@@ -42,33 +42,23 @@ conn = sqlite3.connect("timetable_generator.db")
 cursor = conn.cursor()
 
 def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
     root.destroy()
     subprocess.run(["python","lecture.py"])
 
 
 def timetable_page() :
-    print("Navigating to timetable page...") #Debug Message
-    print("Timetable Page opened")#Debug Message
     root.destroy()
     subprocess.run(["python","timetable_ADITYA.py"])
 
 def teacher_section() :
-    print("Navigating to teacher_section page...") #Debug Message
-    print("Teacher Section Page opened")#Debug Message
     root.destroy()
     subprocess.run(["python","Teacher_section.py"])
 
 def USER() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
     root.destroy()
     subprocess.run(["python","user.py"])
 
 def activity() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
     root.destroy()
     subprocess.run(["python","notifications.py"])
 
@@ -87,22 +77,22 @@ def timetable_frame(subjects):
     # Loop through the days and create labels
     for day in days:
         # Create a label for the day
-        day_label = Label(calendar, text=day, font=("Arial", 12, "bold"), bg="#C1BBEB", fg="#3a3a3a")
+        day_label = Label(calendar, text=day, font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#3a3a3a")
         day_label.grid(row=0, column=days.index(day), padx=20, pady=5)
 
         # Create a frame for the time slots
         time_frame = Frame(calendar, bg="#C1BBEB")
-        time_frame.grid(row=1, column=days.index(day), padx=20, pady=5)
+        time_frame.grid(row=1, column=days.index(day), padx=10, pady=5)
 
         # Create a list of time slots for the day
-        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
         
 
         # Loop through the time slots and create labels
         for slot in time_slots:
 
             # Create a label for the time slot
-            slot_label = Label(time_frame, text=slot, font=("Arial", 8), bg="#C1BBEB", fg="#3a3a3a")
+            slot_label = Label(time_frame, text=slot, font=("Arial", 6), bg="#C1BBEB", fg="#3a3a3a")
             
             # Pack the label to the time frame
             slot_label.pack(side=TOP, anchor=W)
@@ -111,9 +101,9 @@ def timetable_frame(subjects):
             if slot != "BREAK":
 
                 # Create a frame for the subject details
-                subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=10, highlightbackground="#A098AE", highlightthickness=2)
+                subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=6, highlightbackground="#A098AE", highlightthickness=2)
                 subject_frame.pack_propagate(1)
-                subject_frame.pack(side=TOP, fill=X, padx=10, pady=10)
+                subject_frame.pack(side=TOP, fill=X, padx=6, pady=6)
 
                 
                 data =[]  
@@ -133,12 +123,12 @@ def timetable_frame(subjects):
 
 
                     # Create a label for the teacher name
-                    teacher_name = Label(subject_frame, text=subjects[subject_index][1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    teacher_name = Label(subject_frame, text=subjects[subject_index][1], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
                     teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
                     
 
                     # Create a label for the room number
-                    room_number = Label(subject_frame, text=subjects[subject_index][2], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    room_number = Label(subject_frame, text=subjects[subject_index][2], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
                     room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
                     
                     subject_index += 1
@@ -260,7 +250,7 @@ def fill_random_tt():
         formatted_data_A.append([teacher_fullname, subject_fullname, room, 0])
     
     # print(formatted_data_B)
-    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     
     save_data.clear()
@@ -275,7 +265,7 @@ def fill_random_tt():
         for slot in time_slots:
             if slot != "BREAK":
                 random.shuffle(formatted_data_A)
-                if (formatted_data_A[0][3] < 3 and non_free_lecture_count_per_day < 4):
+                if (formatted_data_A[0][3] < 4 and non_free_lecture_count_per_day < 4):
                     data=[formatted_data_A[0][0],formatted_data_A[0][1],formatted_data_A[0][2], day, slot]
                     formatted_data_A[0][3] += 1
                     non_free_lecture_count_per_day += 1
@@ -294,7 +284,7 @@ def fill_random_tt():
                         save_data.append(data)
                     else:
                         for i in formatted_data_A:
-                            if i[3] < 3:
+                            if i[3] < 4:
                                 data=[i[0],i[1],i[2], day, slot]
                                 i[3] += 1
                                 # save_data.clear()
@@ -352,7 +342,7 @@ def fill_timetable_B():
     tt_of_A = cursor.fetchall()
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
 
     formatted_data_B = []
 
@@ -381,7 +371,7 @@ def fill_timetable_B():
 
                 for i in formatted_data_B:
                     if (i[0] != needed_data[0] and i[1] != needed_data[1]):
-                        if (i[3] < 3 and non_free_lecture_count_per_day < 4):
+                        if (i[3] < 4 and non_free_lecture_count_per_day < 4):
                             teacher_fullname = i[0] 
                             subject_fullname = i[1]
                             room=i[2]
@@ -409,7 +399,7 @@ def fill_timetable_B():
                                 save_data.append(data)
                             else:
                                 for i in formatted_data_B:
-                                    if i[3] < 3:
+                                    if i[3] < 4:
                                         data=[i[0],i[1],i[2], day, slot]
                                         i[3] += 1
                                         # save_data.clear()
@@ -457,7 +447,7 @@ def fill_timetable_C():
     # print(tt_of_B)
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
 
     formatted_data_C = []
 
@@ -493,7 +483,7 @@ def fill_timetable_C():
                 for i in formatted_data_C:
                     print(needed_data_A, needed_data_B)
                     if ((i[0] != needed_data_A[0] and i[0] != needed_data_B[0]) and (i[1] != needed_data_A[1] and i[1] != needed_data_B[1])):
-                        if (i[3] < 3 and non_free_lecture_count_per_day < 4):
+                        if (i[3] < 4 and non_free_lecture_count_per_day < 4):
                             teacher_fullname = i[0] 
                             subject_fullname = i[1]
                             room=i[2]
@@ -514,14 +504,14 @@ def fill_timetable_C():
                             save_data.append(data)
                             break
                         else:
-                            if (total_free_lecture_count < 10 and total_nonfree_lecture_count == 15):
+                            if (total_free_lecture_count < 10 and total_nonfree_lecture_count == 20):
                                 data=["Free", "", "", day, slot]
                                 free_lecture_count_per_day += 1
                                 total_free_lecture_count += 1
                                 save_data.append(data)
                             else:
                                 for i in formatted_data_C:
-                                    if i[3] < 3:
+                                    if i[3] < 4:
                                         data=[i[0],i[1],i[2], day, slot]
                                         i[3] += 1
                                         # save_data.clear()
@@ -592,14 +582,14 @@ user_name.pack(side=RIGHT, pady=10)
 content = Frame(root, bg="#C1BBEB", width=600, height=550)
 content.pack(side=TOP, fill=BOTH, expand=True)
 
-class_1_button = Button(content, text="D10A", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_A)
-class_1_button.pack(side=TOP, padx=25, pady=10, anchor="w")
+class_1_button = Button(content, text="D10A", font=("Arial", 8), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_A)
+class_1_button.pack(side=TOP, padx=15, pady=5, anchor="w")
 
-class_2_button = Button(content, text="D10B", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_B)
-class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth() + 41, y=class_1_button.winfo_y()+10)
+class_2_button = Button(content, text="D10B", font=("Arial", 8), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_B)
+class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth() + 41, y=class_1_button.winfo_y()+5)
 
-class_3_button = Button(content, text="D10C", font=("Arial", 10), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_C)
-class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth() + 115, y=class_2_button.winfo_y()+10)
+class_3_button = Button(content, text="D10C", font=("Arial", 8), bg="#4a148c", fg="white", bd=0, padx=10, pady=5, command=fill_timetable_C)
+class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth() + 115, y=class_2_button.winfo_y()+5)
 
 # Binding click events to buttons
 def show_focusA(event):
