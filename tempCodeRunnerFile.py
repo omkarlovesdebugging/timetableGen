@@ -1,2 +1,1 @@
-ed_data_A[0][3] >= 3:
-                    #     random.shuf
+i[1] != needed_data_A[1] and i[1] != needed_data_B[1]
