@@ -46,7 +46,7 @@ def timetable_page() :
     print("Navigating to timetable page...") #Debug Message
     print("Timetable Page opened")#Debug Message
     root.destroy()
-    subprocess.run(["python","timetable.py"])
+    subprocess.run(["python","timetable_ADITYA.py"])
 
 def teacher_section() :
     print("Navigating to teacher_section page...") #Debug Message
