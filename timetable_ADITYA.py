@@ -334,7 +334,7 @@ def fill_random_tt():
                     lab_count_per_day+=1
                     total_nonfree_lab_count+=1
 
-                elif non_free_lecture_count_per_day >= 4 and total_free_lecture_count < 4:
+                elif non_free_lecture_count_per_day >= 4 and total_free_lecture_count < 4 and (slot == "8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30"):
                     data=["Free", "", "", day, slot]
                     free_lecture_count_per_day += 1
                     total_free_lecture_count += 1
@@ -348,7 +348,7 @@ def fill_random_tt():
                     total_nonfree_lab_count+=1
 
                 else:
-                    if (total_nonfree_lecture_count < 18):
+                    if (total_nonfree_lecture_count < 18 and non_free_lecture_count_per_day < 4):
                         for i in formatted_data_A:
                             if i[0] == "lecture" and i[4] < 3:
                                 data=[i[1],i[2],i[3], day, slot]
@@ -368,7 +368,7 @@ def fill_random_tt():
                                 total_nonfree_lab_count+=1
                                 break
                     # else (total_free_lecture_count < 7 and total_nonfree_lecture_count >= 15):
-                    else:    
+                    elif (slot =="8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30"):    
                         data=["Free", "", "", day, slot]
                         free_lecture_count_per_day += 1
                         total_free_lecture_count += 1
