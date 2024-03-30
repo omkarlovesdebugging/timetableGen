@@ -274,9 +274,11 @@ def fill_random_tt():
 
     total_free_lecture_count = 0
     total_nonfree_lecture_count = 0
-    
+    total_nonfree_lab_count = 0
+
     total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
-    
+
+    print("\nSTART\n")
     for day in days:
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
@@ -285,9 +287,9 @@ def fill_random_tt():
         for slot in time_slots:
             if slot != "BREAK":
                 random.shuffle(formatted_data_A)
-                print("START\n",formatted_data_A, "\n")
-                if (total_nonfree_lecture_count < 15) and ((save_data == [] and formatted_data_A[0][0] == "lecture") or (formatted_data_A[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] != "Lab") or (formatted_data_A[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] >= 2)):
-                    if (formatted_data_A[0][4] < 3 and non_free_lecture_count_per_day < 4):
+                print(total_lab_count)
+                if (total_nonfree_lecture_count < 15 and non_free_lecture_count_per_day < 4) and ((save_data == [] and formatted_data_A[0][0] == "lecture") or (formatted_data_A[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] != "Lab") or (formatted_data_A[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] >= 2)):
+                    if (formatted_data_A[0][4] < 3 and non_free_lecture_count_per_day < 3):
                         data=[formatted_data_A[0][1],formatted_data_A[0][2],formatted_data_A[0][3], day, slot]
                         formatted_data_A[0][4] += 1
                         non_free_lecture_count_per_day += 1
@@ -303,19 +305,21 @@ def fill_random_tt():
                                 non_free_lecture_count_per_day += 1
                                 total_nonfree_lecture_count += 1
                                 break
-                elif (save_data == [] and formatted_data_A[0][0] == "lab"):
+                elif (save_data == [] and formatted_data_A[0][0] == "lab" and slot != "2:30-3:30" and slot != "11:30-12:30"):
                     if (total_lab_count[formatted_data_A[0][2]] < 2):
                         data=[formatted_data_A[0][1],formatted_data_A[0][2],formatted_data_A[0][3], day, slot]
                         total_lab_count[formatted_data_A[0][2]] += 1
                         save_data.append(data)
                         lab_count_per_day+=1
+                        total_nonfree_lab_count+=1
                     else:
                         for lab_name, lab_count in total_lab_count.items():
                             if lab_count < 2:
                                 data=["         ",lab_name, "   ", day, slot]
                                 save_data.append(data)
-                                lab_count += 1
+                                total_lab_count[lab_name] += 1
                                 lab_count_per_day+=1
+                                total_nonfree_lab_count+=1
                                 break
                 elif (save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] < 2 and lab_count_per_day < 4):
                     data=save_data[-1]
@@ -324,44 +328,48 @@ def fill_random_tt():
                     save_data.append(data)
                     total_lab_count[save_data[-1][1]] += 1
                     lab_count_per_day+=1
+                    total_nonfree_lab_count+=1
 
-                elif (formatted_data_A[0][0] == "lab" and total_lab_count[formatted_data_A[0][2]] < 2 and lab_count_per_day < 4):
-                    data=[formatted_data_A[0][1],formatted_data_A[0][2],formatted_data_A[0][3], day, slot]
-                    save_data.append(data)
-                    total_lab_count[formatted_data_A[0][2]] += 1
-                    lab_count_per_day+=1
-
-                elif (non_free_lecture_count_per_day >= 4) and total_free_lecture_count < 7:
+                elif non_free_lecture_count_per_day >= 3 and total_free_lecture_count < 7:
                     data=["Free", "", "", day, slot]
                     free_lecture_count_per_day += 1
                     total_free_lecture_count += 1
                     save_data.append(data)
+
+                elif (formatted_data_A[0][0] == "lab" and total_lab_count[formatted_data_A[0][2]] < 2 and lab_count_per_day < 4 and slot != "2:30-3:30" and slot != "11:30-12:30"):
+                    data=[formatted_data_A[0][1],formatted_data_A[0][2],formatted_data_A[0][3], day, slot]
+                    save_data.append(data)
+                    total_lab_count[formatted_data_A[0][2]] += 1
+                    lab_count_per_day+=1
+                    total_nonfree_lab_count+=1
+
                 else:
-                    if (total_free_lecture_count < 7 and total_nonfree_lecture_count >= 15):
+                    if (total_nonfree_lecture_count < 15):
+                        for i in formatted_data_A:
+                            if i[0] == "lecture" and i[4] < 3:
+                                data=[i[1],i[2],i[3], day, slot]
+                                i[4] += 1
+                                # save_data.clear()
+                                save_data.append(data)
+                                non_free_lecture_count_per_day += 1
+                                total_nonfree_lecture_count += 1
+                                break
+                    elif (total_nonfree_lab_count < 8):
+                        for lab_name, lab_count in total_lab_count.items():
+                            if lab_count < 2:
+                                data=["         ",lab_name, "   ", day, slot]
+                                save_data.append(data)
+                                total_lab_count[lab_name] += 1
+                                lab_count_per_day+=1
+                                total_nonfree_lab_count+=1
+                                break
+                    # else (total_free_lecture_count < 7 and total_nonfree_lecture_count >= 15):
+                    else:    
                         data=["Free", "", "", day, slot]
                         free_lecture_count_per_day += 1
                         total_free_lecture_count += 1
                         save_data.append(data)
-                    else:
-                        if (total_nonfree_lecture_count < 15):
-                            for i in formatted_data_A:
-                                if i[0] == "lecture" and i[4] < 3:
-                                    data=[i[1],i[2],i[3], day, slot]
-                                    i[4] += 1
-                                    # save_data.clear()
-                                    save_data.append(data)
-                                    non_free_lecture_count_per_day += 1
-                                    total_nonfree_lecture_count += 1
-                                    break
-                        else:
-                            for lab_name, lab_count in total_lab_count.items():
-                                if lab_count < 2:
-                                    data=["         ",lab_name, "   ", day, slot]
-                                    save_data.append(data)
-                                    lab_count += 1
-                                    lab_count_per_day+=1
-                                    break
-
+                        
     if (len(teachers_data) < 5 and len(teachers_data) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
@@ -378,6 +386,7 @@ def fill_random_tt():
     for i in range(0,len(save_data)):
         cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
+    print("\nEND\n")
 
     # load_timetable(subjects=formatted_data_A)
     timetable_frame(subjects=save_data)
