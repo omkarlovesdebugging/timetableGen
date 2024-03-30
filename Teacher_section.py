@@ -48,6 +48,21 @@ def save_details():
 def tree_insert_details():
     cursor.execute("SELECT * FROM teacher")
     rows = cursor.fetchall()
+
+        
+    tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUBJECT", "EMAIL"), show="headings", height=len(rows))
+    tree.pack(padx=10, pady=10)
+
+    tree.column("S.NO", width=25, anchor=CENTER)
+    tree.column("NAME", width=100, anchor=CENTER)
+    tree.column("SUBJECT", width=100, anchor=CENTER)
+    tree.column("EMAIL", width=200, anchor=CENTER)
+
+    tree.heading("S.NO", text="S.NO")
+    tree.heading("NAME", text="NAME")
+    tree.heading("SUBJECT", text="SUBJECT")
+    tree.heading("EMAIL", text="EMAIL")
+
     for item in tree.get_children():
         tree.delete(item)
     for row in rows:
@@ -183,20 +198,6 @@ save_btn.grid(row=12, column=1, padx=10, pady=10)
 list_section = LabelFrame(right_frame, text="Teacher List", font=("Arial", 14), fg="#ffffff", bg="#4a148c", width=550, height=600)
 list_section.grid(row=0, column=1, padx=10, pady=10)
 
-tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUBJECT", "EMAIL"), show="headings", height=5)
-tree.pack(padx=10, pady=10)
-
-tree.column("S.NO", width=25, anchor=CENTER)
-tree.column("NAME", width=100, anchor=CENTER)
-tree.column("SUBJECT", width=100, anchor=CENTER)
-tree.column("EMAIL", width=200, anchor=CENTER)
-
-tree.heading("S.NO", text="S.NO")
-tree.heading("NAME", text="NAME")
-tree.heading("SUBJECT", text="SUBJECT")
-tree.heading("EMAIL", text="EMAIL")
-
 tree_insert_details()
-
 
 root.mainloop()
