@@ -63,12 +63,12 @@ def activity() :
     subprocess.run(["python","notifications.py"])
 
 def timetable_frame(subjects):
-    global calendar
-    if (calendar):
-        calendar.destroy() 
+    # global calendar
+    # if (calendar):
+    #     calendar.destroy() 
         
-    calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
-    calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
+    # calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
+    # calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
 
     # Create a list of days for the calendar
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -273,7 +273,6 @@ def fill_random_tt():
     total non free lecture count limit = 15
     
     labs count per day limit = 2 * 2(hrs) = 4
-
     """
 
     total_free_lecture_count = 0
@@ -282,7 +281,6 @@ def fill_random_tt():
 
     total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
 
-    print("\nSTART\n")
     for day in days:
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
@@ -325,6 +323,7 @@ def fill_random_tt():
                                 lab_count_per_day+=1
                                 total_nonfree_lab_count+=1
                                 break
+                            
                 elif (save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] < 2 and lab_count_per_day < 4):
                     data=save_data[-1].copy()
                     data[3]=day
@@ -390,11 +389,8 @@ def fill_random_tt():
     for i in range(0,len(save_data)):
         cursor.execute("INSERT INTO timetable (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
-    print("\nEND\n")
 
     # load_timetable(subjects=formatted_data_A)
-    for i in save_data:
-        print(i, "\n")
     timetable_frame(subjects=save_data)
 
 
@@ -434,20 +430,32 @@ def fill_timetable_B():
 
     formatted_data_B = []
 
+    formatted_data_B = [
+        ["lab","         ","Python Lab","   " ], 
+        ["lab","         ","COA Lab","   " ], 
+        ["lab","         ","OS Lab","   " ],
+        ["lab","         ","CN Lab","   " ]
+    ]
+
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
         room="512"
 
-        formatted_data_B.append([teacher_fullname, subject_fullname, room, 0])
+        formatted_data_B.append(["lecture",teacher_fullname, subject_fullname, room, 0])
     
 
     total_free_lecture_count = 0
     total_nonfree_lecture_count = 0
+    total_nonfree_lab_count = 0
+
+    total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
+
 
     for day in days:
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
+        lab_count_per_day = 0
 
         for slot in time_slots:
             if slot != "BREAK":
@@ -457,46 +465,94 @@ def fill_timetable_B():
                     if (j[3] == day and j[4] == slot):
                         needed_data = j 
 
-                for i in formatted_data_B:
-                    if (i[0] != needed_data[0] and i[1] != needed_data[1]):
-                        if (i[3] < 4 and non_free_lecture_count_per_day < 4):
-                            teacher_fullname = i[0] 
-                            subject_fullname = i[1]
-                            room=i[2]
-
-                            # formatted_data_B.append((teacher_fullname, subject_fullname, room))
-        
-                            data = [teacher_fullname, subject_fullname, room, day, slot]
-                            save_data.append(data)
-                            
-                            i[3] += 1
+                # for i in formatted_data_B:
+                while (formatted_data_B[0][1] == needed_data[1] and formatted_data_B[0][2] == needed_data[0]):
+                    random.shuffle(formatted_data_B)
+                else:
+                # print(needed_data)
+                    if (total_nonfree_lecture_count < 18 and non_free_lecture_count_per_day < 4) and ((save_data == [] and formatted_data_B[0][0] == "lecture") or (formatted_data_B[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] != "Lab") or (formatted_data_B[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] >= 2)):
+                        if (formatted_data_B[0][4] < 3 and non_free_lecture_count_per_day < 4):
+                            data=[formatted_data_B[0][1],formatted_data_B[0][2],formatted_data_B[0][3], day, slot]
+                            formatted_data_B[0][4] += 1
                             non_free_lecture_count_per_day += 1
                             total_nonfree_lecture_count += 1
-                            break   
-                        elif (free_lecture_count_per_day < 3 or non_free_lecture_count_per_day > 3) and total_free_lecture_count < 10:
+                            save_data.append(data)
+                        else:
+                            for i in formatted_data_B:
+                                if i[0] == "lecture" and i[4] < 3:
+                                    data=[i[1],i[2],i[3], day, slot]
+                                    i[4] += 1
+                                    # save_data.clear()
+                                    save_data.append(data)
+                                    non_free_lecture_count_per_day += 1
+                                    total_nonfree_lecture_count += 1
+                                    break
+                    elif (save_data == [] and formatted_data_B[0][0] == "lab" and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
+                        if (total_lab_count[formatted_data_B[0][2]] < 2):
+                            data=[formatted_data_B[0][1],formatted_data_B[0][2],formatted_data_B[0][3], day, slot]
+                            total_lab_count[formatted_data_B[0][2]] += 1
+                            save_data.append(data)
+                            lab_count_per_day+=1
+                            total_nonfree_lab_count+=1
+                        else:
+                            for lab_name, lab_count in total_lab_count.items():
+                                if lab_count < 2:
+                                    data=["         ",lab_name, "   ", day, slot]
+                                    save_data.append(data)
+                                    total_lab_count[lab_name] += 1
+                                    lab_count_per_day+=1
+                                    total_nonfree_lab_count+=1
+                                    break
+                                
+                    elif (save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] < 2 and lab_count_per_day < 4):
+                        data=save_data[-1].copy()
+                        data[3]=day
+                        data[4]=slot
+                        save_data.append(data)
+                        total_lab_count[save_data[-1][1]] += 1
+                        lab_count_per_day+=1
+                        total_nonfree_lab_count+=1
+
+                    elif non_free_lecture_count_per_day >= 4 and free_lecture_count_per_day < 2 and total_free_lecture_count < 4 and (slot == "8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30"):
+                        data=["Free", "", "", day, slot]
+                        free_lecture_count_per_day += 1
+                        total_free_lecture_count += 1
+                        save_data.append(data)
+
+                    elif (formatted_data_B[0][0] == "lab" and total_lab_count[formatted_data_B[0][2]] < 2 and lab_count_per_day < 4 and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
+                        data=[formatted_data_B[0][1],formatted_data_B[0][2],formatted_data_B[0][3], day, slot]
+                        save_data.append(data)
+                        total_lab_count[formatted_data_B[0][2]] += 1
+                        lab_count_per_day+=1
+                        total_nonfree_lab_count+=1
+
+                    else:
+                        if (total_nonfree_lecture_count < 18 and non_free_lecture_count_per_day < 4):
+                            for i in formatted_data_B:
+                                if i[0] == "lecture" and i[4] < 3:
+                                    data=[i[1],i[2],i[3], day, slot]
+                                    i[4] += 1
+                                    # save_data.clear()
+                                    save_data.append(data)
+                                    non_free_lecture_count_per_day += 1
+                                    total_nonfree_lecture_count += 1
+                                    break
+                        elif (lab_count_per_day < 2 and total_nonfree_lab_count < 8 and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
+                            for lab_name, lab_count in total_lab_count.items():
+                                if lab_count < 2:
+                                    data=["         ",lab_name, "   ", day, slot]
+                                    save_data.append(data)
+                                    total_lab_count[lab_name] += 1
+                                    lab_count_per_day+=1
+                                    total_nonfree_lab_count+=1
+                                    break
+                        # else (total_free_lecture_count < 7 and total_nonfree_lecture_count >= 15):
+                        elif (total_free_lecture_count < 4 and free_lecture_count_per_day < 2 and (slot =="8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30")):    
                             data=["Free", "", "", day, slot]
                             free_lecture_count_per_day += 1
                             total_free_lecture_count += 1
                             save_data.append(data)
-                            break
-                        else:
-                            if (total_free_lecture_count < 10 and total_nonfree_lecture_count == 15):
-                                data=["Free", "", "", day, slot]
-                                free_lecture_count_per_day += 1
-                                total_free_lecture_count += 1
-                                save_data.append(data)
-                            else:
-                                for i in formatted_data_B:
-                                    if i[3] < 4:
-                                        data=[i[0],i[1],i[2], day, slot]
-                                        i[3] += 1
-                                        # save_data.clear()
-                                        save_data.append(data)
-                                        non_free_lecture_count_per_day += 1
-                                        total_nonfree_lecture_count += 1
-                                        break
-                            break
-                                
+                                                
     # print(formatted_data_A)
     # print(formatted_data_B)
 
@@ -506,7 +562,7 @@ def fill_timetable_B():
 
     # load_timetable(subjects=formatted_data)
     for i in range(0, len(save_data)):
-        cursor.execute("INSERT INTO timetable_B (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable_B (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     timetable_frame(subjects=save_data)
@@ -543,25 +599,36 @@ def fill_timetable_C():
 
     formatted_data_C = []
 
+    formatted_data_C = [
+        ["lab","         ","Python Lab","   " ], 
+        ["lab","         ","COA Lab","   " ], 
+        ["lab","         ","OS Lab","   " ],
+        ["lab","         ","CN Lab","   " ]
+    ]
+
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
         room="512"
 
-        formatted_data_C.append([teacher_fullname, subject_fullname, room, 0])
+        formatted_data_C.append(["lecture",teacher_fullname, subject_fullname, room, 0])
     
 
     total_free_lecture_count = 0
     total_nonfree_lecture_count = 0
+    total_nonfree_lab_count = 0
+
+    total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
 
     for day in days:
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
+        lab_count_per_day = 0
 
         for slot in time_slots:
             if slot != "BREAK":
 
-                random.shuffle(teachers_data)
+                random.shuffle(formatted_data_C)
                 needed_data_A=()
                 needed_data_B=()
                 for j in tt_of_A:
@@ -572,49 +639,95 @@ def fill_timetable_C():
                     if (k[3] == day and k[4] == slot):
                         needed_data_B = k 
 
-                for i in formatted_data_C:
-                    print(needed_data_A, needed_data_B)
-                    if ((i[0] != needed_data_A[0] and i[0] != needed_data_B[0]) and (i[1] != needed_data_A[1] and i[1] != needed_data_B[1])):
-                        if (i[3] < 4 and non_free_lecture_count_per_day < 4):
-                            teacher_fullname = i[0] 
-                            subject_fullname = i[1]
-                            room=i[2]
-
-                            # formatted_data_B.append((teacher_fullname, subject_fullname, room))
-        
-                            data = [teacher_fullname, subject_fullname, room, day, slot]
-                            save_data.append(data)
-                            
-                            i[3] += 1
+                while (formatted_data_C[0][1] == needed_data_A[1] and formatted_data_C[0][2] == needed_data_A[0] and formatted_data_C[0][1] == needed_data_B[1] and formatted_data_C[0][2] == needed_data_B[0]):
+                    random.shuffle(formatted_data_C)
+                else:
+                # print(needed_data)
+                    if (total_nonfree_lecture_count < 18 and non_free_lecture_count_per_day < 4) and ((save_data == [] and formatted_data_C[0][0] == "lecture") or (formatted_data_C[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] != "Lab") or (formatted_data_C[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] >= 2)):
+                        if (formatted_data_C[0][4] < 3 and non_free_lecture_count_per_day < 4):
+                            data=[formatted_data_C[0][1],formatted_data_C[0][2],formatted_data_C[0][3], day, slot]
+                            formatted_data_C[0][4] += 1
                             non_free_lecture_count_per_day += 1
                             total_nonfree_lecture_count += 1
-                            break   
-                        elif (free_lecture_count_per_day < 3 or non_free_lecture_count_per_day > 3) and total_free_lecture_count < 10:
+                            save_data.append(data)
+                        else:
+                            for i in formatted_data_C:
+                                if i[0] == "lecture" and i[4] < 3:
+                                    data=[i[1],i[2],i[3], day, slot]
+                                    i[4] += 1
+                                    # save_data.clear()
+                                    save_data.append(data)
+                                    non_free_lecture_count_per_day += 1
+                                    total_nonfree_lecture_count += 1
+                                    break
+                    elif (save_data == [] and formatted_data_C[0][0] == "lab" and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
+                        if (total_lab_count[formatted_data_C[0][2]] < 2):
+                            data=[formatted_data_C[0][1],formatted_data_C[0][2],formatted_data_C[0][3], day, slot]
+                            total_lab_count[formatted_data_C[0][2]] += 1
+                            save_data.append(data)
+                            lab_count_per_day+=1
+                            total_nonfree_lab_count+=1
+                        else:
+                            for lab_name, lab_count in total_lab_count.items():
+                                if lab_count < 2:
+                                    data=["         ",lab_name, "   ", day, slot]
+                                    save_data.append(data)
+                                    total_lab_count[lab_name] += 1
+                                    lab_count_per_day+=1
+                                    total_nonfree_lab_count+=1
+                                    break
+                                
+                    elif (save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] < 2 and lab_count_per_day < 4):
+                        data=save_data[-1].copy()
+                        data[3]=day
+                        data[4]=slot
+                        save_data.append(data)
+                        total_lab_count[save_data[-1][1]] += 1
+                        lab_count_per_day+=1
+                        total_nonfree_lab_count+=1
+
+                    elif non_free_lecture_count_per_day >= 4 and free_lecture_count_per_day < 2 and total_free_lecture_count < 4 and (slot == "8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30"):
+                        data=["Free", "", "", day, slot]
+                        free_lecture_count_per_day += 1
+                        total_free_lecture_count += 1
+                        save_data.append(data)
+
+                    elif (formatted_data_C[0][0] == "lab" and total_lab_count[formatted_data_C[0][2]] < 2 and lab_count_per_day < 4 and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
+                        data=[formatted_data_C[0][1],formatted_data_C[0][2],formatted_data_C[0][3], day, slot]
+                        save_data.append(data)
+                        total_lab_count[formatted_data_C[0][2]] += 1
+                        lab_count_per_day+=1
+                        total_nonfree_lab_count+=1
+
+                    else:
+                        if (total_nonfree_lecture_count < 18 and non_free_lecture_count_per_day < 4):
+                            for i in formatted_data_C:
+                                if i[0] == "lecture" and i[4] < 3:
+                                    data=[i[1],i[2],i[3], day, slot]
+                                    i[4] += 1
+                                    # save_data.clear()
+                                    save_data.append(data)
+                                    non_free_lecture_count_per_day += 1
+                                    total_nonfree_lecture_count += 1
+                                    break
+                        elif (lab_count_per_day < 2 and total_nonfree_lab_count < 8 and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
+                            for lab_name, lab_count in total_lab_count.items():
+                                if lab_count < 2:
+                                    data=["         ",lab_name, "   ", day, slot]
+                                    save_data.append(data)
+                                    total_lab_count[lab_name] += 1
+                                    lab_count_per_day+=1
+                                    total_nonfree_lab_count+=1
+                                    break
+                        # else (total_free_lecture_count < 7 and total_nonfree_lecture_count >= 15):
+                        elif (total_free_lecture_count < 4 and free_lecture_count_per_day < 2 and (slot =="8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30")):    
                             data=["Free", "", "", day, slot]
                             free_lecture_count_per_day += 1
                             total_free_lecture_count += 1
                             save_data.append(data)
-                            break
-                        else:
-                            if (total_free_lecture_count < 10 and total_nonfree_lecture_count == 20):
-                                data=["Free", "", "", day, slot]
-                                free_lecture_count_per_day += 1
-                                total_free_lecture_count += 1
-                                save_data.append(data)
-                            else:
-                                for i in formatted_data_C:
-                                    if i[3] < 4:
-                                        data=[i[0],i[1],i[2], day, slot]
-                                        i[3] += 1
-                                        # save_data.clear()
-                                        save_data.append(data)
-                                        non_free_lecture_count_per_day += 1
-                                        total_nonfree_lecture_count += 1
-                                        break
-                            break      
-    
+                                       
     # print(formatted_data_A)
-    # print(formatted_data_B)
+    # print(formatted_data_C)
 
     if (len(teachers_data) < 5 and len(teachers_data) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
@@ -622,7 +735,7 @@ def fill_timetable_C():
 
         
     for i in range(0, len(save_data)):
-        cursor.execute("INSERT INTO timetable_C (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable_C (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     # load_timetable(subjects=formatted_data)
