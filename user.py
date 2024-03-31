@@ -110,7 +110,7 @@ faculty_profile_pic = Label(faculty_info_frame, text="Profile Pic", bg="white", 
 faculty_profile_pic.grid(row=0, column=0, padx=10, pady=10)
 
 # Faculty name, phone number, and email
-faculty_name = Label(faculty_info_frame, text="Dr. John Doe", font=("Arial", 14, "bold"), bg="white")
+faculty_name = Label(faculty_info_frame, text="Abhay Kshirsagar", font=("Arial", 14, "bold"), bg="white")
 faculty_name.grid(row=0, column=1, padx=10, pady=10, sticky=W)
 
 faculty_phone = Label(faculty_info_frame, text="Phone: 123-456-7890", bg="white")
@@ -124,18 +124,23 @@ classes_info_frame = Frame(root, bg="white", width=300, height=250)
 classes_info_frame.pack(side=LEFT, fill=BOTH, expand=True)
 
 # Today's classes
-today_classes_label = Label(classes_info_frame, text="Today's Classes", font=("Arial", 14, "bold"), bg="white")
+today_classes_label = Label(classes_info_frame, text="Classes", font=("Arial", 14, "bold"), bg="white")
 today_classes_label.pack(side=TOP, padx=10, pady=10)
 
-# Example classes information
-class1_info = Label(classes_info_frame, text="Math - Room 101", bg="white")
-class1_info.pack(anchor=W, padx=20, pady=5)
+# Function to fetch and display today's classes for the faculty
+def fetch_and_display_classes():
+    # Fetch the faculty name
+    faculty_name = "Abhay Kshirsagar"  # Update with the actual faculty name
+    # Query to fetch today's classes for the faculty
+    cursor.execute("SELECT * FROM timetable WHERE teacher_name=?", (faculty_name,))
+    lectures = cursor.fetchall()
+    # Display the classes along with time slots
+    for lecture in lectures:
+        lecture_info = Label(classes_info_frame, text=f"{lecture[1]} - {lecture[2]} ({lecture[3]} - {lecture[4]})", bg="white")
+        lecture_info.pack(anchor=W, padx=20, pady=5)
 
-class2_info = Label(classes_info_frame, text="Physics - Room 102", bg="white")
-class2_info.pack(anchor=W, padx=20, pady=5)
-
-class3_info = Label(classes_info_frame, text="Chemistry - Room 103", bg="white")
-class3_info.pack(anchor=W, padx=20, pady=5)
+# Fetch and display today's classes
+fetch_and_display_classes()
 
 # Vertical section 2: Notices Information
 notices_info_frame = Frame(root, bg="white", width=300, height=250)
