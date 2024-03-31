@@ -135,7 +135,9 @@ info_frame = Frame(root, bg="#A274FF")
 info_frame.pack(side=LEFT, fill=BOTH, expand=True)
 info_frame.grid_rowconfigure(0, weight=1)
 info_frame.grid_columnconfigure(0, weight=1)
-info_frame.grid_columnconfigure(1, weight=1)  # Set weight for the second column
+info_frame.grid_columnconfigure(1, weight=1)
+# info_frame.grid_columnconfigure(1, weight=1)
+info_frame.grid_columnconfigure(2, weight=1)  # Set weight for the second column
 
 
 classes_info_frame=Frame(info_frame, bg="#D1BAFF",height=1000,width=400 )
@@ -146,7 +148,7 @@ classes_info_frame.grid(row=0,column=0,padx=30,pady=30,sticky="nsew")
 
 # Today's classes
 today_classes_label = Label(classes_info_frame, text="Classes", font=("Arial", 25, "bold"), bg="#D1BAFF")
-today_classes_label.pack(side=TOP, padx=10, pady=10)
+today_classes_label.grid(row=0,column=0, padx=10, pady=10)
 
 # Function to fetch and display today's classes for the faculty
 def fetch_and_display_classes():
@@ -155,13 +157,75 @@ def fetch_and_display_classes():
     # Fetch the faculty name
       # Update with the actual faculty name
     # Query to fetch today's classes for the faculty
-    cursor.execute("SELECT * FROM timetable WHERE teacher_name=?", (Name_of_faculty,))
-    lectures = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable WHERE teacher_name=? and subject_name='COA' ", (Name_of_faculty,))
+    lecturesA = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable_B WHERE teacher_name=? and subject_name='COA'", (Name_of_faculty,))
+    lecturesB = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable_C WHERE teacher_name=? and subject_name='COA'", (Name_of_faculty,))
+    lecturesC = cursor.fetchall()
     # Display the classes along with time slots
-    for lecture in lectures:
-        lecture_info = Label(classes_info_frame, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 13))
-        lecture_info.pack(anchor=W, padx=20, pady=5)
+    week_lecA=Frame(classes_info_frame,bg="#D1BAFF")
+    week_lecA.grid(row=2,column=0,padx=10, pady=10)
+    week_lecB=Frame(classes_info_frame,bg="#D1BAFF")
+    week_lecB.grid(row=2,column=1,padx=10, pady=10)
+    week_lecC=Frame(classes_info_frame,bg="#D1BAFF")
+    week_lecC.grid(row=2,column=2,padx=10, pady=10)
 
+    Lecture_label = Label(classes_info_frame, text="Lectures", bg="#D1BAFF",font=("Arial", 16,"bold"))
+    Lecture_label.grid(row=1,column=0, padx=5, pady=5)
+
+    class_A = Label(week_lecA, text="D10A", bg="#D1BAFF",font=("Arial", 13,"bold"))
+    class_A.pack(anchor=W, padx=5, pady=5)
+    class_B = Label(week_lecB, text="D10B", bg="#D1BAFF",font=("Arial", 13,"bold"))
+    class_B.pack(anchor=W, padx=5, pady=5)
+    class_C = Label(week_lecC, text="D10C", bg="#D1BAFF",font=("Arial", 13,"bold"))
+    class_C.pack(anchor=W, padx=5, pady=5)
+    for lecture in lecturesA:
+        lecture_info = Label(week_lecA, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 8))
+        lecture_info.pack(anchor=W, padx=5, pady=5)
+    for lecture in lecturesB:
+        lecture_info = Label(week_lecB, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 8))
+        lecture_info.pack(anchor=W, padx=5, pady=5)
+    for lecture in lecturesC:
+        lecture_info = Label(week_lecC, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 8))
+        lecture_info.pack(anchor=W, padx=5, pady=5)
+
+
+
+    cursor.execute("SELECT * FROM timetable WHERE teacher_name=? and subject_name='COA Lab' ", (Name_of_faculty,))
+    lecturesA = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable_B WHERE teacher_name=? and subject_name='COA Lab'", (Name_of_faculty,))
+    lecturesB = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable_C WHERE teacher_name=? and subject_name='COA Lab'", (Name_of_faculty,))
+    lecturesC = cursor.fetchall()
+    # Display the classes along with time slots
+    week_labA=Frame(classes_info_frame,bg="#D1BAFF")
+    week_labA.grid(row=4,column=0,padx=10, pady=10)
+    week_labB=Frame(classes_info_frame,bg="#D1BAFF")
+    week_labB.grid(row=4,column=1,padx=10, pady=10)
+    week_labC=Frame(classes_info_frame,bg="#D1BAFF")
+    week_labC.grid(row=4,column=2,padx=10, pady=10)
+
+    Lab_Label = Label(classes_info_frame, text="Labs", bg="#D1BAFF",font=("Arial", 16,"bold"))
+    Lab_Label.grid(row=3,column=0, padx=5, pady=5)
+
+    Lclass_A = Label(week_labA, text="D10A", bg="#D1BAFF",font=("Arial", 13,"bold"))
+    Lclass_A.pack(anchor=W, padx=5, pady=5)
+    Lclass_B = Label(week_labB, text="D10B", bg="#D1BAFF",font=("Arial", 13,"bold"))
+    Lclass_B.pack(anchor=W, padx=5, pady=5)
+    Lclass_C = Label(week_labC, text="D10C", bg="#D1BAFF",font=("Arial", 13,"bold"))
+    Lclass_C.pack(anchor=W, padx=5, pady=5)
+    for lecture in lecturesA:
+        lecture_info = Label(week_labA, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 8))
+        lecture_info.pack(anchor=W, padx=5, pady=5)
+    for lecture in lecturesB:
+        lecture_info = Label(week_labB, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 8))
+        lecture_info.pack(anchor=W, padx=5, pady=5)
+    for lecture in lecturesC:
+        lecture_info = Label(week_labC, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 8))
+        lecture_info.pack(anchor=W, padx=5, pady=5)
+
+    
 # Fetch and display today's classes
 fetch_and_display_classes()
 
