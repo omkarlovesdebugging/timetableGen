@@ -279,8 +279,7 @@ def fill_random_tt():
     print("\nA ka savedata\n")
 
     for day in days:
-        # print(save_data, "\n")
-
+        
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
         lab_count_per_day = 0
@@ -381,7 +380,8 @@ def fill_random_tt():
                         free_lecture_count_per_day += 1
                         total_free_lecture_count += 1
                         save_data.append(data)
-                print(data,"\n")        
+        print(save_data, "\n")
+
     if (len(teachers_data) < 5 and len(teachers_data) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
@@ -396,7 +396,7 @@ def fill_random_tt():
     conn.commit()
 
     for i in range(0,len(save_data)):
-        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     # load_timetable(subjects=formatted_data_A)
@@ -457,8 +457,7 @@ def fill_timetable_B():
     print("\nB ka savedata\n")
     for day in days:
         
-        # print(save_data, "\n")
-
+        
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
         lab_count_per_day = 0
@@ -568,7 +567,7 @@ def fill_timetable_B():
                             free_lecture_count_per_day += 1
                             total_free_lecture_count += 1
                             save_data.append(data)
-            print(data,"\n")                                     
+        print(save_data, "\n")                                        
     # print(formatted_data_A)
     # print(formatted_data_B)
 
@@ -578,7 +577,7 @@ def fill_timetable_B():
 
     # load_timetable(subjects=formatted_data)
     for i in range(0, len(save_data)):
-        cursor.execute("INSERT INTO timetable_B (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable_B (teacher_name, subject_name,room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     timetable_frame(subjects=save_data)
@@ -759,7 +758,7 @@ def fill_timetable_C():
 
         
     for i in range(0, len(save_data)):
-        cursor.execute("INSERT INTO timetable_C (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable_C (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     # load_timetable(subjects=formatted_data)
