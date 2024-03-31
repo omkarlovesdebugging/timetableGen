@@ -92,10 +92,10 @@ def timetable_frame(subjects):
 
         # Create a frame for the time slots
         time_frame = Frame(calendar, bg="#C1BBEB")
-        time_frame.grid(row=1, column=days.index(day), padx=20, pady=5)
+        time_frame.grid(row=1, column=days.index(day), padx=10, pady=5)
 
         # Create a list of time slots for the day
-        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30","2:30-3:30"]
         
 
         # Loop through the time slots and create labels
@@ -113,7 +113,7 @@ def timetable_frame(subjects):
                 # Create a frame for the subject details
                 subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=10, highlightbackground="#A098AE", highlightthickness=2)
                 subject_frame.pack_propagate(1)
-                subject_frame.pack(side=TOP, fill=X, padx=10, pady=10)
+                subject_frame.pack(side=TOP, fill=X, padx=6, pady=6)
 
                 
                 data =[]  
@@ -241,7 +241,7 @@ def save_details():
     #         file.write(f"{j}\n")
     #     file.write("\nD10C:\n")
     #     for k in data_c:
-    #         file.write(f"{k}\n")
+    #         file.write(f"{k
 
     
     
@@ -264,14 +264,16 @@ def fill_random_tt():
         
 
     # print(formatted_data_B)
-    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30","2:30-3:30"]
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     
     save_data.clear()
     Subject_count={'Maths': 0 ,'Ata nhi':0,'kt':0, 'Mechanic':0, 'Martial Arts':0, "Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0 }
     a=0
+    MAX_Lectures_for_a_day=3
     # i=0
     for day in days:
+        todays_lec_count=0
         # if a==1:
         #     Subject_count[formatted_data_A[i][1]]=2
         a=0
@@ -279,12 +281,27 @@ def fill_random_tt():
             if slot != "BREAK":
                 if a==0:
                     random.shuffle(formatted_data_A)
+                elif a==1 and Subject_count[formatted_data_A[i][1]]==2: 
+                    a=0
+                    random.shuffle(formatted_data_A)   
                 elif a==1:
                     a=0
+                print(formatted_data_A)
                 for i in range(len(formatted_data_A)):
-                    if (Subject_count[formatted_data_A[i][1]]<3) :
-                        if((formatted_data_A[i][1]== "Python Lab") or (formatted_data_A[i][1] == "COA Lab") or
-                           (formatted_data_A[i][1] == "OS Lab") or (formatted_data_A[i][1] == "CN Lab")) and (Subject_count[formatted_data_A[i][1]]<2)   :
+                    if (Subject_count[formatted_data_A[i][1]]<3 ) :
+                        if todays_lec_count > 3 :
+                            data=["Free","Lecture","","",""]
+                            save_data.append(data)
+                        elif (formatted_data_A[i][1] != "Python Lab") and (formatted_data_A[i][1] != "COA Lab") and (formatted_data_A[i][1] != "OS Lab") and (formatted_data_A[i][1] != "CN Lab") : 
+                            Subject_count[formatted_data_A[i][1]]+=1
+                            todays_lec_count+=1
+                            print(i,"subject",formatted_data_A[i][1] ,":", Subject_count[formatted_data_A[i][1]])
+                            data=[formatted_data_A[i][0],formatted_data_A[i][1],formatted_data_A[i][2], day, slot]
+                            # save_data.clear()
+                            save_data.append(data)
+                            break
+                        elif((formatted_data_A[i][1]== "Python Lab") or (formatted_data_A[i][1] == "COA Lab") or
+                           (formatted_data_A[i][1] == "OS Lab") or (formatted_data_A[i][1] == "CN Lab")) and (Subject_count[formatted_data_A[i][1]]<2)  :
                             # print(formatted_data_A[0][1])
                             Subject_count[formatted_data_A[i][1]]+=1
                             print(i,"lab",formatted_data_A[i][1] ,":", Subject_count[formatted_data_A[i][1]])
@@ -293,17 +310,7 @@ def fill_random_tt():
                             save_data.append(data)
                             a=1
                             break
-                        elif (formatted_data_A[i][1] != "Python Lab") and (formatted_data_A[i][1] != "COA Lab") and (formatted_data_A[i][1] != "OS Lab") and (formatted_data_A[i][1] != "CN Lab") : 
-                            Subject_count[formatted_data_A[i][1]]+=1
-                            print(i,"subject",formatted_data_A[i][1] ,":", Subject_count[formatted_data_A[i][1]])
-                            data=[formatted_data_A[i][0],formatted_data_A[i][1],formatted_data_A[i][2], day, slot]
-                            # save_data.clear()
-                            save_data.append(data)
-                            break
-                    # elif Subject_count[formatted_data_A[i][1]]==3  :
-                    #         print(formatted_data_A[i][1])
-                    #         data=["Free","Lecture","","",""]
-                    #         save_data.append(data)
+                        
     while len(save_data)!=25:
         data=["Free","Lecture","","",""]
         save_data.append(data)
@@ -356,7 +363,7 @@ def fill_timetable_B():
     print(tt_of_A)
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30","2:30-3:30"]
 
     formatted_data_B = []
 
@@ -420,7 +427,7 @@ def fill_timetable_C():
     print(tt_of_B)
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+    time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30","2:30-3:30"]
 
     formatted_data_C = []
 
