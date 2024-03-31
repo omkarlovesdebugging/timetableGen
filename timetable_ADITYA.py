@@ -63,12 +63,12 @@ def activity() :
     subprocess.run(["python","notifications.py"])
 
 def timetable_frame(subjects):
-    global calendar
-    if (calendar):
-        calendar.destroy() 
+    # global calendar
+    # if (calendar):
+    #     calendar.destroy() 
         
-    calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
-    calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
+    # calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
+    # calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
 
     # Create a list of days for the calendar
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -253,7 +253,6 @@ def fill_random_tt():
         lecture_type=i[5]
 
         formatted_data_A.append([lecture_type,teacher_fullname, subject_fullname, room, 0])
-    
     # print(formatted_data_B)
     time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -277,7 +276,11 @@ def fill_random_tt():
 
     total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
     
+    print("\nA ka savedata\n")
+
     for day in days:
+        # print(save_data, "\n")
+
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
         lab_count_per_day = 0
@@ -313,7 +316,12 @@ def fill_random_tt():
                     else:
                         for lab_name, lab_count in total_lab_count.items():
                             if lab_count < 2:
-                                data=["         ",lab_name, "   ", day, slot]
+                                needed_data=[]
+                                for i in formatted_data_A:
+                                    if i[2] == lab_name:
+                                        needed_data=i.copy()
+                                        break
+                                data=[needed_data[1],needed_data[2], needed_data[3], day, slot]
                                 save_data.append(data)
                                 total_lab_count[lab_name] += 1
                                 lab_count_per_day+=1
@@ -356,7 +364,12 @@ def fill_random_tt():
                     elif (total_nonfree_lab_count < 8 and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
                         for lab_name, lab_count in total_lab_count.items():
                             if lab_count < 2:
-                                data=["         ",lab_name, "   ", day, slot]
+                                needed_data=[]
+                                for i in formatted_data_A:
+                                    if i[2] == lab_name:
+                                        needed_data=i.copy()
+                                        break
+                                data=[needed_data[1],needed_data[2], needed_data[3], day, slot]
                                 save_data.append(data)
                                 total_lab_count[lab_name] += 1
                                 lab_count_per_day+=1
@@ -368,7 +381,7 @@ def fill_random_tt():
                         free_lecture_count_per_day += 1
                         total_free_lecture_count += 1
                         save_data.append(data)
-                        
+                print(data,"\n")        
     if (len(teachers_data) < 5 and len(teachers_data) > 0):
         msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
         return ValueError
@@ -383,7 +396,7 @@ def fill_random_tt():
     conn.commit()
 
     for i in range(0,len(save_data)):
-        cursor.execute("INSERT INTO timetable (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     # load_timetable(subjects=formatted_data_A)
@@ -426,19 +439,13 @@ def fill_timetable_B():
 
     formatted_data_B = []
 
-    formatted_data_B = [
-        ["lab","         ","Python Lab","   " ], 
-        ["lab","         ","COA Lab","   " ], 
-        ["lab","         ","OS Lab","   " ],
-        ["lab","         ","CN Lab","   " ]
-    ]
-
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
         room="512"
+        lecture_type=i[5]
 
-        formatted_data_B.append(["lecture",teacher_fullname, subject_fullname, room, 0])
+        formatted_data_B.append([lecture_type ,teacher_fullname, subject_fullname, room, 0])
     
 
     total_free_lecture_count = 0
@@ -447,8 +454,11 @@ def fill_timetable_B():
 
     total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
 
-
+    print("\nB ka savedata\n")
     for day in days:
+        
+        # print(save_data, "\n")
+
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
         lab_count_per_day = 0
@@ -456,16 +466,16 @@ def fill_timetable_B():
         for slot in time_slots:
             if slot != "BREAK":
                 random.shuffle(formatted_data_B)
-                needed_data=()
+                needed_data_A=()
                 for j in tt_of_A:
                     if (j[3] == day and j[4] == slot):
-                        needed_data = j 
+                        needed_data_A = j 
 
                 # for i in formatted_data_B:
-                while (formatted_data_B[0][1] == needed_data[1] and formatted_data_B[0][2] == needed_data[0]):
+                while (formatted_data_B[0][1] == needed_data_A[1] and formatted_data_B[0][2] == needed_data_A[0]):
                     random.shuffle(formatted_data_B)
                 else:
-                # print(needed_data)
+                # print(needed_data_A)
                     if (total_nonfree_lecture_count < 18 and non_free_lecture_count_per_day < 4) and ((save_data == [] and formatted_data_B[0][0] == "lecture") or (formatted_data_B[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] != "Lab") or (formatted_data_B[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] >= 2)):
                         if (formatted_data_B[0][4] < 3 and non_free_lecture_count_per_day < 4):
                             data=[formatted_data_B[0][1],formatted_data_B[0][2],formatted_data_B[0][3], day, slot]
@@ -493,7 +503,12 @@ def fill_timetable_B():
                         else:
                             for lab_name, lab_count in total_lab_count.items():
                                 if lab_count < 2:
-                                    data=["         ",lab_name, "   ", day, slot]
+                                    needed_data=[]
+                                    for i in formatted_data_B:
+                                        if i[2] == lab_name:
+                                            needed_data=i.copy()
+                                            break
+                                    data=[needed_data[1],needed_data[2], needed_data[3], day, slot]
                                     save_data.append(data)
                                     total_lab_count[lab_name] += 1
                                     lab_count_per_day+=1
@@ -536,7 +551,12 @@ def fill_timetable_B():
                         elif (lab_count_per_day < 2 and total_nonfree_lab_count < 8 and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
                             for lab_name, lab_count in total_lab_count.items():
                                 if lab_count < 2:
-                                    data=["         ",lab_name, "   ", day, slot]
+                                    needed_data=[]
+                                    for i in formatted_data_B:
+                                        if i[2] == lab_name:
+                                            needed_data=i.copy()
+                                            break
+                                    data=[needed_data[1],needed_data[2], needed_data[3], day, slot]
                                     save_data.append(data)
                                     total_lab_count[lab_name] += 1
                                     lab_count_per_day+=1
@@ -548,7 +568,7 @@ def fill_timetable_B():
                             free_lecture_count_per_day += 1
                             total_free_lecture_count += 1
                             save_data.append(data)
-                                                
+            print(data,"\n")                                     
     # print(formatted_data_A)
     # print(formatted_data_B)
 
@@ -558,7 +578,7 @@ def fill_timetable_B():
 
     # load_timetable(subjects=formatted_data)
     for i in range(0, len(save_data)):
-        cursor.execute("INSERT INTO timetable_B (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable_B (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     timetable_frame(subjects=save_data)
@@ -595,19 +615,13 @@ def fill_timetable_C():
 
     formatted_data_C = []
 
-    formatted_data_C = [
-        ["lab","         ","Python Lab","   " ], 
-        ["lab","         ","COA Lab","   " ], 
-        ["lab","         ","OS Lab","   " ],
-        ["lab","         ","CN Lab","   " ]
-    ]
-
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
         room="512"
+        lecture_type=i[5]
 
-        formatted_data_C.append(["lecture",teacher_fullname, subject_fullname, room, 0])
+        formatted_data_C.append([lecture_type ,teacher_fullname, subject_fullname, room, 0])
     
 
     total_free_lecture_count = 0
@@ -616,7 +630,11 @@ def fill_timetable_C():
 
     total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
 
+    print("\nC ka savedata\n")
+
     for day in days:
+        print(save_data, "\n")
+
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
         lab_count_per_day = 0
@@ -666,7 +684,12 @@ def fill_timetable_C():
                         else:
                             for lab_name, lab_count in total_lab_count.items():
                                 if lab_count < 2:
-                                    data=["         ",lab_name, "   ", day, slot]
+                                    needed_data=[]
+                                    for i in formatted_data_C:
+                                        if i[2] == lab_name:
+                                            needed_data=i.copy()
+                                            break
+                                    data=[needed_data[1],needed_data[2], needed_data[3], day, slot]
                                     save_data.append(data)
                                     total_lab_count[lab_name] += 1
                                     lab_count_per_day+=1
@@ -709,7 +732,12 @@ def fill_timetable_C():
                         elif (lab_count_per_day < 2 and total_nonfree_lab_count < 8 and slot != "2:30-3:30" and slot != "11:30-12:30" and slot != "9:30-10:30"):
                             for lab_name, lab_count in total_lab_count.items():
                                 if lab_count < 2:
-                                    data=["         ",lab_name, "   ", day, slot]
+                                    needed_data=[]
+                                    for i in formatted_data_C:
+                                        if i[2] == lab_name:
+                                            needed_data=i.copy()
+                                            break
+                                    data=[needed_data[1],needed_data[2], needed_data[3], day, slot]
                                     save_data.append(data)
                                     total_lab_count[lab_name] += 1
                                     lab_count_per_day+=1
@@ -731,7 +759,7 @@ def fill_timetable_C():
 
         
     for i in range(0, len(save_data)):
-        cursor.execute("INSERT INTO timetable_C (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable_C (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
 
     # load_timetable(subjects=formatted_data)
