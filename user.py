@@ -1,7 +1,7 @@
 import subprocess
 from tkinter import *
 from tkinter import ttk
-import time
+import sqlite3
 
 # Create a root window
 root = Tk()
@@ -11,6 +11,10 @@ root.title("Timetable")
 
 # Set the size and position of the window
 root.geometry("800x600+100+100")
+
+# Connect to the database
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
 
 # Create a left sidebar frame
 sidebar = Frame(root, bg="#4a148c", width=200, height=600)
@@ -28,54 +32,52 @@ menu_items = [
 # Create a list of buttons for the sidebar
 buttons = []
 
-def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
+def lecture_page():
+    print("Navigating to lecture page...") # Debug Message
+    print("Lecture Page opened") # Debug Message
     root.destroy()
-    subprocess.run(["python","lecture.py"])
+    subprocess.run(["python", "lecture.py"])
 
-
-def timetable_page() :
-    print("Navigating to timetable page...") #Debug Message
-    print("Timetable Page opened")#Debug Message
+def timetable_page():
+    print("Navigating to timetable page...") # Debug Message
+    print("Timetable Page opened") # Debug Message
     root.destroy()
-    subprocess.run(["python","timetable_ADITYA.py"])
+    subprocess.run(["python", "timetable_ADITYA.py"])
 
-def teacher_section() :
-    print("Navigating to teacher_section page...") #Debug Message
-    print("Teacher Section Page opened")#Debug Message
+def teacher_section():
+    print("Navigating to teacher_section page...") # Debug Message
+    print("Teacher Section Page opened") # Debug Message
     root.destroy()
-    subprocess.run(["python","Teacher_section.py"])
+    subprocess.run(["python", "Teacher_section.py"])
 
-def USER() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
+def USER():
+    print("Navigating to user page...") # Debug Message
+    print("User Page opened") # Debug Message
     root.destroy()
-    subprocess.run(["python","user.py"])
+    subprocess.run(["python", "user.py"])
 
-def activity() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
+def activity():
+    print("Navigating to activity page...") # Debug Message
+    print("Activity Page opened") # Debug Message
     root.destroy()
-    subprocess.run(["python","notifications.py"])
+    subprocess.run(["python", "notifications.py"])
 
 # Loop through the menu items and create buttons
 for item in menu_items:
     if (item[0] == "USER"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=USER)
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w", command=USER)
         button.pack(anchor="w") 
-    # Create a button with text and icon
-    elif (item[0]=="LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
+    elif (item[0] == "LECTURES"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=lecture_page)
         button.pack(anchor="w") 
-    elif (item[0]=="TIMETABLE"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
+    elif (item[0] == "TIMETABLE"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=timetable_page)
         button.pack(anchor="w") 
-    elif (item[0]=="LATEST ACTIVITY"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=activity)
+    elif (item[0] == "LATEST ACTIVITY"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=activity)
         button.pack(anchor="w") 
-    elif (item[0]=="TEACHERS"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
+    elif (item[0] == "TEACHERS"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=teacher_section)
         button.pack(anchor="w") 
     # Add the button to the list
     buttons.append(button)
@@ -108,7 +110,7 @@ faculty_profile_pic = Label(faculty_info_frame, text="Profile Pic", bg="white", 
 faculty_profile_pic.grid(row=0, column=0, padx=10, pady=10)
 
 # Faculty name, phone number, and email
-faculty_name = Label(faculty_info_frame, text="Dr. John Doe", font=("Arial", 14, "bold"), bg="white")
+faculty_name = Label(faculty_info_frame, text="Abhay Kshirsagar", font=("Arial", 14, "bold"), bg="white")
 faculty_name.grid(row=0, column=1, padx=10, pady=10, sticky=W)
 
 faculty_phone = Label(faculty_info_frame, text="Phone: 123-456-7890", bg="white")
@@ -122,18 +124,23 @@ classes_info_frame = Frame(root, bg="white", width=300, height=250)
 classes_info_frame.pack(side=LEFT, fill=BOTH, expand=True)
 
 # Today's classes
-today_classes_label = Label(classes_info_frame, text="Today's Classes", font=("Arial", 14, "bold"), bg="white")
+today_classes_label = Label(classes_info_frame, text="Classes", font=("Arial", 14, "bold"), bg="white")
 today_classes_label.pack(side=TOP, padx=10, pady=10)
 
-# Example classes information
-class1_info = Label(classes_info_frame, text="Math - Room 101", bg="white")
-class1_info.pack(anchor=W, padx=20, pady=5)
+# Function to fetch and display today's classes for the faculty
+def fetch_and_display_classes():
+    # Fetch the faculty name
+    faculty_name = "Abhay Kshirsagar"  # Update with the actual faculty name
+    # Query to fetch today's classes for the faculty
+    cursor.execute("SELECT * FROM timetable WHERE teacher_name=?", (faculty_name,))
+    lectures = cursor.fetchall()
+    # Display the classes along with time slots
+    for lecture in lectures:
+        lecture_info = Label(classes_info_frame, text=f"{lecture[1]} - {lecture[2]} ({lecture[3]} - {lecture[4]})", bg="white")
+        lecture_info.pack(anchor=W, padx=20, pady=5)
 
-class2_info = Label(classes_info_frame, text="Physics - Room 102", bg="white")
-class2_info.pack(anchor=W, padx=20, pady=5)
-
-class3_info = Label(classes_info_frame, text="Chemistry - Room 103", bg="white")
-class3_info.pack(anchor=W, padx=20, pady=5)
+# Fetch and display today's classes
+fetch_and_display_classes()
 
 # Vertical section 2: Notices Information
 notices_info_frame = Frame(root, bg="white", width=300, height=250)
@@ -143,21 +150,15 @@ notices_info_frame.pack(side=LEFT, fill=BOTH, expand=True)
 notices_label = Label(notices_info_frame, text="Notices", font=("Arial", 14, "bold"), bg="white")
 notices_label.pack(side=TOP, padx=10, pady=10)
 
-# Example notices
-notice1 = Label(notices_info_frame, text="Important meeting tomorrow", bg="white")
-notice1.pack(anchor=W, padx=20, pady=5)
+# Function to fetch and display notifications
+def fetch_and_display_notifications():
+    cursor.execute("SELECT * FROM notifications")
+    notifications = cursor.fetchall()
+    for notification in notifications:
+        notice = Label(notices_info_frame, text=notification[3], bg="white")
+        notice.pack(anchor=W, padx=20, pady=5)
 
-notice2 = Label(notices_info_frame, text="Holiday on Friday", bg="white")
-notice2.pack(anchor=W, padx=20, pady=5)
-
-notice3 = Label(notices_info_frame, text="Submit progress report by Wednesday", bg="white")
-notice3.pack(anchor=W, padx=20, pady=5)
+# Fetch and display notifications
+fetch_and_display_notifications()
 
 root.mainloop()
-
-
-
-
-
-
-
