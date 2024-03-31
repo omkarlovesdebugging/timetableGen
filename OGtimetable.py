@@ -41,11 +41,7 @@ buttons = []
 conn = sqlite3.connect("timetable_generator.db")
 cursor = conn.cursor()
 
-def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","lecture.py"])
+ 
 
 
 def timetable_page() :
@@ -482,9 +478,6 @@ for item in menu_items:
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
         button.pack(anchor="w") 
     # Create a button with text and icon
-    elif (item[0]=="LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
-        button.pack(anchor="w") 
     elif (item[0]=="TIMETABLE"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
         button.pack(anchor="w") 

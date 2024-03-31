@@ -154,9 +154,16 @@ def generate_pdf_from_database(data_a,data_b,data_c):
     i=0
     # Add data to the PDF
     table_data_a = []
-    table_data_a.append(["TEACHER","SUBJECT","ROOM","DAY","TIME-SLOT"])
+    table_data_a.append(["DAY","TIME-SLOT","TEACHER","SUBJECT","ROOM"])
+    var = 1
     for row in data_a:
-        table_data_a.append(row)
+        if var % 6 == 1:
+            table_data_a.append(row)
+        else:
+            new_row = row.copy()
+            new_row[0] = ""
+            table_data_a.append(new_row)
+        var+=1
 
     # Create table
     table_a = Table(table_data_a)
@@ -182,9 +189,16 @@ def generate_pdf_from_database(data_a,data_b,data_c):
     
     # Add data to the PDF
     table_data_b = []
-    table_data_b.append(["TEACHER","SUBJECT","ROOM","DAY","TIME-SLOT"])
+    table_data_b.append(["DAY","TIME-SLOT","TEACHER","SUBJECT","ROOM"])
+    var = 1
     for row in data_b:    
-        table_data_b.append(row)
+        if var % 6 == 1:
+            table_data_b.append(row)
+        else:
+            new_row = row.copy()
+            new_row[0] = ""
+            table_data_b.append(new_row)
+        var+=1
 
     table_b = Table(table_data_b)
     table_b.setStyle(style)
@@ -195,9 +209,16 @@ def generate_pdf_from_database(data_a,data_b,data_c):
     elements.append(PageBreak())
 
     table_data_c = []
-    table_data_c.append(["TEACHER","SUBJECT","ROOM","DAY","TIME-SLOT"])
+    table_data_c.append(["DAY","TIME-SLOT","TEACHER","SUBJECT","ROOM"])
+    var = 1
     for row in data_c:    
-        table_data_c.append(row)
+        if var % 6 == 1:
+            table_data_c.append(row)
+        else:
+            new_row = row.copy()
+            new_row[0] = ""
+            table_data_c.append(new_row)
+        var+=1
 
     table_c = Table(table_data_c)
     table_c.setStyle(style)
@@ -211,14 +232,24 @@ def generate_pdf_from_database(data_a,data_b,data_c):
 def save_details():
     cursor.execute("SELECT * FROM timetable")
     data_a=cursor.fetchall()
+    new_data_A = []
+    for i in data_a:
+        new_data_A.append([i[3], i[4], i[1], i[0], i[2]])
 
     cursor.execute("SELECT * FROM timetable_B")
     data_b=cursor.fetchall()
+    new_data_B = []
+    for j in data_b:
+        new_data_B.append([j[3], j[4], j[1], j[0], j[2]])
 
     cursor.execute("SELECT * FROM timetable_C")
     data_c=cursor.fetchall()
+    new_data_C = []
+    for k in data_c:
+        new_data_C.append([k[3], k[4], k[1], k[0], k[2]])
+
     # Create a PDF document
-    generate_pdf_from_database(data_a,data_b,data_c)
+    generate_pdf_from_database(new_data_A,new_data_B,new_data_C)
 
 
     if (data_a == [] or data_b == [] or data_c == []):
@@ -249,8 +280,12 @@ def fill_random_tt():
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
-        room="514"
         lecture_type=i[5]
+
+        if lecture_type == "lecture":
+            room = "514"
+        else:
+            room = random.randint(509, 513)
 
         formatted_data_A.append([lecture_type,teacher_fullname, subject_fullname, room, 0])
     # print(formatted_data_B)
@@ -468,8 +503,12 @@ def fill_timetable_B():
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
-        room="512"
         lecture_type=i[5]
+
+        if lecture_type == "lecture":
+            room = "513"
+        else:
+            room = random.randint(509, 513)
 
         formatted_data_B.append([lecture_type ,teacher_fullname, subject_fullname, room, 0])
     
@@ -678,8 +717,12 @@ def fill_timetable_C():
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
-        room="512"
         lecture_type=i[5]
+
+        if lecture_type == "lecture":
+            room = "512"
+        else:
+            room = random.randint(509, 513)
 
         formatted_data_C.append([lecture_type ,teacher_fullname, subject_fullname, room, 0])
     
@@ -853,9 +896,6 @@ for item in menu_items:
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
         button.pack(anchor="w") 
     # Create a button with text and icon
-    elif (item[0]=="LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
-        button.pack(anchor="w") 
     elif (item[0]=="TIMETABLE"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
         button.pack(anchor="w") 

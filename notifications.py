@@ -36,11 +36,7 @@ menu_items = [
     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon.png").subsample(2))
 ]
 
-def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","lecture.py"])
+ 
 
 def timetable_page() :
     print("Navigating to timetable page...") #Debug Message
@@ -78,9 +74,6 @@ buttons = []
 for item in menu_items:
     if (item[0] == "TEACHERS"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
-        button.pack(anchor="w") 
-    elif (item[0]=="LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
         button.pack(anchor="w") 
     elif (item[0]=="TIMETABLE"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
