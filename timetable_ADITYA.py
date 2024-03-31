@@ -63,12 +63,12 @@ def activity() :
     subprocess.run(["python","notifications.py"])
 
 def timetable_frame(subjects):
-    # global calendar
-    # if (calendar):
-    #     calendar.destroy() 
+    global calendar
+    if (calendar):
+        calendar.destroy() 
         
-    # calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
-    # calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
+    calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
+    calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
 
     # Create a list of days for the calendar
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
