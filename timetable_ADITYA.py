@@ -284,7 +284,6 @@ def fill_random_tt():
 
     print("\nSTART\n")
     for day in days:
-        print(save_data,"\n")
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
         lab_count_per_day = 0
@@ -314,18 +313,14 @@ def fill_random_tt():
                     if (total_lab_count[formatted_data_A[0][2]] < 2):
                         data=[formatted_data_A[0][1],formatted_data_A[0][2],formatted_data_A[0][3], day, slot]
                         total_lab_count[formatted_data_A[0][2]] += 1
-                        print("1st wala", data, "\n")
                         save_data.append(data)
-                        print("1st wala save", save_data, "\n")
                         lab_count_per_day+=1
                         total_nonfree_lab_count+=1
                     else:
                         for lab_name, lab_count in total_lab_count.items():
                             if lab_count < 2:
                                 data=["         ",lab_name, "   ", day, slot]
-                                print("2nd wala", data, "\n")
                                 save_data.append(data)
-                                print("2nd wala save", save_data, "\n")
                                 total_lab_count[lab_name] += 1
                                 lab_count_per_day+=1
                                 total_nonfree_lab_count+=1
@@ -334,9 +329,7 @@ def fill_random_tt():
                     data=save_data[-1].copy()
                     data[3]=day
                     data[4]=slot
-                    print("3rd wala", data, "\n")
                     save_data.append(data)
-                    print("3rd wala save", save_data, "\n")
                     total_lab_count[save_data[-1][1]] += 1
                     lab_count_per_day+=1
                     total_nonfree_lab_count+=1
@@ -375,7 +368,7 @@ def fill_random_tt():
                                 total_nonfree_lab_count+=1
                                 break
                     # else (total_free_lecture_count < 7 and total_nonfree_lecture_count >= 15):
-                    elif (slot =="8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30"):    
+                    elif (total_free_lecture_count < 4 and (slot =="8:30-9:30" or slot == "1:30-2:30" or slot == "2:30-3:30")):    
                         data=["Free", "", "", day, slot]
                         free_lecture_count_per_day += 1
                         total_free_lecture_count += 1
