@@ -119,11 +119,7 @@ def Lab_tree_insert_details():
     for row in rows:
         Ltree.insert("", "end", values=(row[0], row[1] + ' ' + row[2], row[3] + " Lab", row[4]))
 
-def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","lecture.py"])
+ 
 
 def timetable_page() :
     print("Navigating to timetable page...") #Debug Message
@@ -181,9 +177,6 @@ buttons = []
 for item in menu_items:
     if (item[0] == "TEACHERS"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=teacher_section)
-        button.pack(anchor="w") 
-    elif (item[0]=="LECTURES"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=lecture_page)
         button.pack(anchor="w") 
     elif (item[0]=="TIMETABLE"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)

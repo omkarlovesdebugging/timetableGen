@@ -75,11 +75,7 @@ def save_details():
     print("Data Saved")
     
 
-def lecture_page() :
-    print("Navigating to lecture page...") #Debug Message
-    print("Lecture Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","lecture.py"])
+ 
 
 
 def timetable_page() :
