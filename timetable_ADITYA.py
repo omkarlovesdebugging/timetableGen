@@ -41,11 +41,6 @@ buttons = []
 conn = sqlite3.connect("timetable_generator.db")
 cursor = conn.cursor()
 
-def lecture_page() :
-    root.destroy()
-    subprocess.run(["python","lecture.py"])
-
-
 def timetable_page() :
     root.destroy()
     subprocess.run(["python","timetable_ADITYA.py"])
