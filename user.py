@@ -113,6 +113,10 @@ faculty_profile_picture = PhotoImage(file="Images/Profile.png").subsample(5)
 faculty_profile_pic = Label(faculty_info_frame, image=faculty_profile_picture, bg="#C1BBEB", padx=20)
 faculty_profile_pic.grid(row=0, column=0, padx=10, pady=10)
 
+cursor.execute("SELECT * FROM teacher WHERE first_name=? and last_name=? and Lec_Type=?", ("Abhay","Kshirsagar","lecture"))
+lectures = cursor.fetchall()
+
+print(lectures)
 # Faculty name, phone number, and email
 faculty_details=Frame( faculty_info_frame,bg="#C1BBEB")
 faculty_details.grid(row=0,column=1,padx=10,pady=10)
@@ -123,7 +127,7 @@ faculty_name.grid(row=0, column=1, padx=10, pady=10, sticky=W)
 faculty_phone = Label(faculty_details, text="Phone: 123-456-7890", font=("Arial", 10), bg="#C1BBEB")
 faculty_phone.grid(row=1, column=1, padx=10, pady=2, sticky=W)
 
-faculty_email = Label(faculty_details, text="Email: john.doe@example.com", font=("Arial", 10), bg="#C1BBEB")
+faculty_email = Label(faculty_details, text=f"Email: {lectures[0][4]}", font=("Arial", 10), bg="#C1BBEB")
 faculty_email.grid(row=2, column=1, padx=10, pady=2, sticky=W)
 
 # Vertical section 1: Classes Information
