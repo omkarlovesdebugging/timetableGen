@@ -32,6 +32,12 @@ menu_items = [
 # Create a list of buttons for the sidebar
 buttons = []
 
+def lecture_page():
+    print("Navigating to lecture page...") # Debug Message
+    print("Lecture Page opened") # Debug Message
+    root.destroy()
+    subprocess.run(["python", "lecture.py"])
+
 def timetable_page():
     print("Navigating to timetable page...") # Debug Message
     print("Timetable Page opened") # Debug Message
@@ -60,6 +66,9 @@ def activity():
 for item in menu_items:
     if (item[0] == "USER"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w", command=USER)
+        button.pack(anchor="w") 
+    elif (item[0] == "LECTURES"):
+        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=lecture_page)
         button.pack(anchor="w") 
     elif (item[0] == "TIMETABLE"):
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=timetable_page)
@@ -126,7 +135,9 @@ info_frame = Frame(root, bg="#A274FF")
 info_frame.pack(side=LEFT, fill=BOTH, expand=True)
 info_frame.grid_rowconfigure(0, weight=1)
 info_frame.grid_columnconfigure(0, weight=1)
-info_frame.grid_columnconfigure(1, weight=1)  # Set weight for the second column
+info_frame.grid_columnconfigure(1, weight=1)
+# info_frame.grid_columnconfigure(1, weight=1)
+info_frame.grid_columnconfigure(2, weight=1)  # Set weight for the second column
 
 
 classes_info_frame=Frame(info_frame, bg="#D1BAFF",height=1000,width=400 )
@@ -137,7 +148,7 @@ classes_info_frame.grid(row=0,column=0,padx=30,pady=30,sticky="nsew")
 
 # Today's classes
 today_classes_label = Label(classes_info_frame, text="Classes", font=("Arial", 25, "bold"), bg="#D1BAFF")
-today_classes_label.pack(side=TOP, padx=10, pady=10)
+today_classes_label.grid(row=0,column=0, padx=10, pady=10)
 
 # Function to fetch and display today's classes for the faculty
 def fetch_and_display_classes():
@@ -146,12 +157,19 @@ def fetch_and_display_classes():
     # Fetch the faculty name
       # Update with the actual faculty name
     # Query to fetch today's classes for the faculty
-    cursor.execute("SELECT * FROM timetable WHERE teacher_name=?", (Name_of_faculty,))
-    lectures = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable WHERE teacher_name=? and subject_name='COA' ", (Name_of_faculty,))
+    lecturesA = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable_B WHERE teacher_name=? and subject_name='COA'", (Name_of_faculty,))
+    lecturesB = cursor.fetchall()
+    cursor.execute("SELECT * FROM timetable_C WHERE teacher_name=? and subject_name='COA'", (Name_of_faculty,))
+    lecturesC = cursor.fetchall()
     # Display the classes along with time slots
-    for lecture in lectures:
-        lecture_info = Label(classes_info_frame, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 13))
-        lecture_info.pack(anchor=W, padx=20, pady=5)
+    week_lecA=Frame(classes_info_frame,bg="#D1BAFF")
+    week_lecA.grid(row=2,column=0,padx=10, pady=10)
+    week_lecB=Frame(classes_info_frame,bg="#D1BAFF")
+    week_lecB.grid(row=2,column=1,padx=10, pady=10)
+    week_lecC=Frame(classes_info_frame,bg="#D1BAFF")
+    week_lecC.grid(row=2,column=2,padx=10, pady=10)
 
     Lecture_label = Label(classes_info_frame, text="Lectures", bg="#D1BAFF",font=("Arial", 16,"bold"))
     Lecture_label.grid(row=1,column=0, padx=5, pady=5)
