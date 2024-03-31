@@ -178,12 +178,12 @@ def send_notification():
     current_date = datetime.now().strftime("%A, %B %d, %Y")
 
     # Fetch data from message entry
-    message_value = message_entry.get("1.0", tk.END)  # Get message from text widget
+    message_value = message_entry.get("1.0", tk.END).rstrip()  # Get message from text widget
 
     # Insert data into database
     cursor.execute("INSERT INTO notifications (time, day, message) VALUES (?, ?, ?)", (current_time, current_date, message_value))
     conn.commit()
-
+    message_entry.delete("1.0",tk.END)
     fetch_data()
     
 

@@ -85,6 +85,8 @@ for item in menu_items:
     button.pack(fill=X)
 
 # Create a top bar frame
+Name_of_faculty = "Abhay Kshirsagar"
+
 topbar = Frame(root, bg="#C1BBEB", width=600, height=50)
 topbar.pack(side=TOP, fill=X)
 
@@ -98,64 +100,82 @@ user_icon = Label(topbar, image=user_icon_image, bg="#C1BBEB")
 user_icon.pack(side=RIGHT, padx=10, pady=10)
 
 # Create a label for the user name
-user_name = Label(topbar, text="Vineeta M.", font=("Arial", 16), bg="#C1BBEB", fg="#4a148c")
+user_name = Label(topbar, text=Name_of_faculty, font=("Arial", 16), bg="#C1BBEB", fg="#4a148c")
 user_name.pack(side=RIGHT, pady=10)
 
 # Horizontal section: Faculty Information
-faculty_info_frame = Frame(root, bg="white", width=600, height=100)
+faculty_info_frame = Frame(root, bg="#C1BBEB", width=600, height=100)
 faculty_info_frame.pack(side=TOP, fill=X)
 
 # Profile picture of faculty
-faculty_profile_pic = Label(faculty_info_frame, text="Profile Pic", bg="white", padx=20)
+
+faculty_profile_picture = PhotoImage(file="Images/Profile.png").subsample(5)
+faculty_profile_pic = Label(faculty_info_frame, image=faculty_profile_picture, bg="#C1BBEB", padx=20)
 faculty_profile_pic.grid(row=0, column=0, padx=10, pady=10)
 
 # Faculty name, phone number, and email
-faculty_name = Label(faculty_info_frame, text="Abhay Kshirsagar", font=("Arial", 14, "bold"), bg="white")
+faculty_details=Frame( faculty_info_frame,bg="#C1BBEB")
+faculty_details.grid(row=0,column=1,padx=10,pady=10)
+
+faculty_name = Label(faculty_details, text="Abhay Kshirsagar", font=("Arial", 25, "bold"), bg="#C1BBEB")
 faculty_name.grid(row=0, column=1, padx=10, pady=10, sticky=W)
 
-faculty_phone = Label(faculty_info_frame, text="Phone: 123-456-7890", bg="white")
+faculty_phone = Label(faculty_details, text="Phone: 123-456-7890", font=("Arial", 10), bg="#C1BBEB")
 faculty_phone.grid(row=1, column=1, padx=10, pady=2, sticky=W)
 
-faculty_email = Label(faculty_info_frame, text="Email: john.doe@example.com", bg="white")
+faculty_email = Label(faculty_details, text="Email: john.doe@example.com", font=("Arial", 10), bg="#C1BBEB")
 faculty_email.grid(row=2, column=1, padx=10, pady=2, sticky=W)
 
 # Vertical section 1: Classes Information
-classes_info_frame = Frame(root, bg="white", width=300, height=250)
-classes_info_frame.pack(side=LEFT, fill=BOTH, expand=True)
+info_frame = Frame(root, bg="#A274FF")
+info_frame.pack(side=LEFT, fill=BOTH, expand=True)
+info_frame.grid_rowconfigure(0, weight=1)
+info_frame.grid_columnconfigure(0, weight=1)
+info_frame.grid_columnconfigure(1, weight=1)  # Set weight for the second column
+
+
+classes_info_frame=Frame(info_frame, bg="#D1BAFF",height=1000,width=400 )
+classes_info_frame.grid(row=0,column=0,padx=30,pady=30,sticky="nsew")
+
+
+
 
 # Today's classes
-today_classes_label = Label(classes_info_frame, text="Classes", font=("Arial", 14, "bold"), bg="white")
+today_classes_label = Label(classes_info_frame, text="Classes", font=("Arial", 25, "bold"), bg="#D1BAFF")
 today_classes_label.pack(side=TOP, padx=10, pady=10)
 
 # Function to fetch and display today's classes for the faculty
 def fetch_and_display_classes():
+    # global Name_of_faculty
+    print(Name_of_faculty)
     # Fetch the faculty name
-    faculty_name = "Abhay Kshirsagar"  # Update with the actual faculty name
+      # Update with the actual faculty name
     # Query to fetch today's classes for the faculty
-    cursor.execute("SELECT * FROM timetable WHERE teacher_name=?", (faculty_name,))
+    cursor.execute("SELECT * FROM timetable WHERE teacher_name=?", (Name_of_faculty,))
     lectures = cursor.fetchall()
     # Display the classes along with time slots
     for lecture in lectures:
-        lecture_info = Label(classes_info_frame, text=f"{lecture[1]} - {lecture[2]} ({lecture[3]} - {lecture[4]})", bg="white")
+        lecture_info = Label(classes_info_frame, text=f"{lecture[3]} - {lecture[2]} ({lecture[4]})", bg="#D1BAFF",font=("Arial", 13))
         lecture_info.pack(anchor=W, padx=20, pady=5)
 
 # Fetch and display today's classes
 fetch_and_display_classes()
 
 # Vertical section 2: Notices Information
-notices_info_frame = Frame(root, bg="white", width=300, height=250)
-notices_info_frame.pack(side=LEFT, fill=BOTH, expand=True)
 
+notices_info_frame = Frame(info_frame, bg="#D1BAFF",  height=1000,width=400,)
+notices_info_frame.grid(row=0,column=1,padx=30,pady=30,sticky="nsew")
 # Notices from Principal/HOD
-notices_label = Label(notices_info_frame, text="Notices", font=("Arial", 14, "bold"), bg="white")
+notices_label = Label(notices_info_frame, text="Notices", font=("Arial", 25, "bold"), bg="#D1BAFF")
 notices_label.pack(side=TOP, padx=10, pady=10)
 
 # Function to fetch and display notifications
 def fetch_and_display_notifications():
     cursor.execute("SELECT * FROM notifications")
     notifications = cursor.fetchall()
+    print(notifications)
     for notification in notifications:
-        notice = Label(notices_info_frame, text=notification[3], bg="white")
+        notice = Label(notices_info_frame, text=f"-> {notification[3]}", bg="#D1BAFF",font=("Arial", 13))
         notice.pack(anchor=W, padx=20, pady=5)
 
 # Fetch and display notifications
