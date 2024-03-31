@@ -284,6 +284,7 @@ def fill_random_tt():
 
     print("\nSTART\n")
     for day in days:
+        print(save_data,"\n")
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
         lab_count_per_day = 0
@@ -291,7 +292,7 @@ def fill_random_tt():
         for slot in time_slots:
             if slot != "BREAK":
                 random.shuffle(formatted_data_A)
-                print(total_lab_count)
+                # print(total_lab_count)
                 if (total_nonfree_lecture_count < 18 and non_free_lecture_count_per_day < 4) and ((save_data == [] and formatted_data_A[0][0] == "lecture") or (formatted_data_A[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] != "Lab") or (formatted_data_A[0][0] == "lecture" and save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] >= 2)):
                     if (formatted_data_A[0][4] < 3 and non_free_lecture_count_per_day < 4):
                         data=[formatted_data_A[0][1],formatted_data_A[0][2],formatted_data_A[0][3], day, slot]
@@ -313,23 +314,29 @@ def fill_random_tt():
                     if (total_lab_count[formatted_data_A[0][2]] < 2):
                         data=[formatted_data_A[0][1],formatted_data_A[0][2],formatted_data_A[0][3], day, slot]
                         total_lab_count[formatted_data_A[0][2]] += 1
+                        print("1st wala", data, "\n")
                         save_data.append(data)
+                        print("1st wala save", save_data, "\n")
                         lab_count_per_day+=1
                         total_nonfree_lab_count+=1
                     else:
                         for lab_name, lab_count in total_lab_count.items():
                             if lab_count < 2:
                                 data=["         ",lab_name, "   ", day, slot]
+                                print("2nd wala", data, "\n")
                                 save_data.append(data)
+                                print("2nd wala save", save_data, "\n")
                                 total_lab_count[lab_name] += 1
                                 lab_count_per_day+=1
                                 total_nonfree_lab_count+=1
                                 break
                 elif (save_data[-1][1].split(" ")[-1] == "Lab" and total_lab_count[save_data[-1][1]] < 2 and lab_count_per_day < 4):
-                    data=save_data[-1]
+                    data=save_data[-1].copy()
                     data[3]=day
                     data[4]=slot
+                    print("3rd wala", data, "\n")
                     save_data.append(data)
+                    print("3rd wala save", save_data, "\n")
                     total_lab_count[save_data[-1][1]] += 1
                     lab_count_per_day+=1
                     total_nonfree_lab_count+=1
@@ -388,11 +395,13 @@ def fill_random_tt():
     conn.commit()
 
     for i in range(0,len(save_data)):
-        cursor.execute("INSERT INTO timetable (subject_name, teacher_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
+        cursor.execute("INSERT INTO timetable (teacher_name, subject_name, room_number, day, time_slot) VALUES ( ?, ?, ?, ?, ?)", (save_data[i][0],save_data[i][1],save_data[i][2], save_data[i][3], save_data[i][4]))
         conn.commit()
     print("\nEND\n")
 
     # load_timetable(subjects=formatted_data_A)
+    for i in save_data:
+        print(i, "\n")
     timetable_frame(subjects=save_data)
 
 
