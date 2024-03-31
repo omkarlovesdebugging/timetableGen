@@ -244,19 +244,15 @@ def fill_random_tt():
     cursor.execute("SELECT * FROM teacher")
     teachers_data = cursor.fetchall()
 
-    formatted_data_A = [
-        ["lab","         ","Python Lab","   " ], 
-        ["lab","         ","COA Lab","   " ], 
-        ["lab","         ","OS Lab","   " ],
-        ["lab","         ","CN Lab","   " ]
-    ]
+    formatted_data_A = []
 
     for i in teachers_data:
         teacher_fullname = i[1] + " " + i[2]
         subject_fullname = i[3]
         room="514"
+        lecture_type=i[5]
 
-        formatted_data_A.append(["lecture",teacher_fullname, subject_fullname, room, 0])
+        formatted_data_A.append([lecture_type,teacher_fullname, subject_fullname, room, 0])
     
     # print(formatted_data_B)
     time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
@@ -280,7 +276,7 @@ def fill_random_tt():
     total_nonfree_lab_count = 0
 
     total_lab_count = {"Python Lab":0, "COA Lab":0, "OS Lab":0, "CN Lab":0}
-
+    
     for day in days:
         free_lecture_count_per_day = 0
         non_free_lecture_count_per_day = 0
