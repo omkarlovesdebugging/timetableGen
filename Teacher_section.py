@@ -71,7 +71,7 @@ def Lsave_details():
 
                  return ValueError        
 
-    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email,Lec_Type) VALUES (?, ?, ?, ?, ?)", (f.rstrip(), l.rstrip(), s.rstrip(), e.rstrip(),"lab"))
+    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email,Lec_Type) VALUES (?, ?, ?, ?, ?)", (f.rstrip(), l.rstrip(), s.rstrip()+" Lab", e.rstrip(),"lab"))
     cursor.execute("SELECT * FROM teacher where Lec_Type='lab'")
     print(cursor.fetchall())
     conn.commit()
