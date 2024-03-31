@@ -1,2 +1,2 @@
-e_data:
-    #     print(i, "\n")
+ DELETE FROM sqlite_sequence WHERE name='teacher';""")
+conn.commit()

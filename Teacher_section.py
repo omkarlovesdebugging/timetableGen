@@ -33,8 +33,8 @@ def save_details():
 
                  return ValueError        
 
-    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email) VALUES (?, ?, ?, ?)", (f.rstrip(), l.rstrip(), s.rstrip(), e.rstrip()))
-    cursor.execute("SELECT * FROM teacher")
+    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email,Lec_Type) VALUES (?, ?, ?, ?, ?)", (f.rstrip(), l.rstrip(), s.rstrip(), e.rstrip(),"lecture"))
+    cursor.execute("SELECT * FROM teacher where Lec_Type='lecture'")
     print(cursor.fetchall())
     conn.commit()
 
@@ -44,29 +44,80 @@ def save_details():
     email_entry.delete(0,tk.END)
 
     tree_insert_details()
+def Lsave_details():
+    f = Lfirst_name_entry.get()
+    l = Llast_name_entry.get()
+    s = Lsubject_entry.get()
+    e = Lemail_entry.get()
+    
+    # koi bhi field empty nahi chut ni chahiye isliye
+    if f.rstrip() and l.rstrip() and s.rstrip() and e.rstrip()  :
+        pass
+    else:
+        return messagebox.showerror("error","Completion of all fields is mandatory.")
 
-def tree_insert_details():
-    cursor.execute("SELECT * FROM teacher")
+    cursor.execute("select * from teacher Where Lec_Type='lab' ")
     rows = cursor.fetchall()
 
-        
-    tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUBJECT", "EMAIL"), show="headings", height=len(rows))
-    tree.pack(padx=10, pady=10)
+    #koi bhi entry repeat nhi honi chahiye isliye 
+    for row in rows :
+        if (row[1]+row[2] == f+l) and (row[3]==s):
+             Yes=messagebox.showerror("error","Entry already exists") 
+             if Yes :
+                 Lfirst_name_entry.delete(0,tk.END)
+                 Llast_name_entry.delete(0,tk.END)
+                 Lsubject_entry.delete(0,tk.END)
+                 Lemail_entry.delete(0,tk.END)
 
-    tree.column("S.NO", width=25, anchor=CENTER)
-    tree.column("NAME", width=100, anchor=CENTER)
-    tree.column("SUBJECT", width=100, anchor=CENTER)
-    tree.column("EMAIL", width=200, anchor=CENTER)
+                 return ValueError        
 
-    tree.heading("S.NO", text="S.NO")
-    tree.heading("NAME", text="NAME")
-    tree.heading("SUBJECT", text="SUBJECT")
-    tree.heading("EMAIL", text="EMAIL")
+    cursor.execute("INSERT INTO teacher (first_name, last_name, subject_name, email,Lec_Type) VALUES (?, ?, ?, ?, ?)", (f.rstrip(), l.rstrip(), s.rstrip(), e.rstrip(),"lab"))
+    cursor.execute("SELECT * FROM teacher where Lec_Type='lab'")
+    print(cursor.fetchall())
+    conn.commit()
+
+    Lfirst_name_entry.delete(0,tk.END)
+    Llast_name_entry.delete(0,tk.END)
+    Lsubject_entry.delete(0,tk.END)
+    Lemail_entry.delete(0,tk.END)
+
+    Lab_tree_insert_details()
+
+def tree_insert_details():
+    cursor.execute("SELECT * FROM teacher where Lec_Type='lecture'")
+    rows = cursor.fetchall()
+    print(rows)
 
     for item in tree.get_children():
         tree.delete(item)
+
     for row in rows:
         tree.insert("", "end", values=(row[0], row[1] + ' ' + row[2], row[3], row[4]))
+
+
+
+def Lab_tree_insert_details():
+    cursor.execute("SELECT * FROM teacher where Lec_Type='lab'")
+    rows = cursor.fetchall()
+    print(rows)
+    
+    # tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUBJECT", "EMAIL"), show="headings", height=len(rows))
+    # tree.pack(padx=10, pady=10)
+
+    # tree.column("S.NO", width=25, anchor=CENTER)
+    # tree.column("NAME", width=100, anchor=CENTER)
+    # tree.column("SUBJECT", width=100, anchor=CENTER)
+    # tree.column("EMAIL", width=200, anchor=CENTER)
+
+    # tree.heading("S.NO", text="S.NO")
+    # tree.heading("NAME", text="NAME")
+    # tree.heading("SUBJECT", text="SUBJECT")
+    # tree.heading("EMAIL", text="EMAIL")
+
+    for item in Ltree.get_children():
+        Ltree.delete(item)
+    for row in rows:
+        Ltree.insert("", "end", values=(row[0], row[1] + ' ' + row[2], row[3] + " Lab", row[4]))
 
 def lecture_page() :
     print("Navigating to lecture page...") #Debug Message
@@ -163,41 +214,114 @@ right_frame = Frame(root, bg="#C1BBEB", width=600, height=550)
 right_frame.pack(side=TOP, fill=BOTH, expand=True)
 
 add_section = LabelFrame(right_frame, text="Personal Details", font=("Arial", 14), fg="#ffffff", bg="#4a148c", width=705, height=790)
-add_section.grid(row=0, column=0, padx=25, pady=25)
+add_section.grid(row=0, column=0, padx=25, pady=15)
 
 personal_section = LabelFrame(add_section, font=("Arial", 12), fg="#4a148c", bg="#ffffff", width=500, height=250)
-personal_section.grid(row=0,column=0,padx=10, pady=10)
+personal_section.grid(row=0,column=0,padx=10, pady=5)
 
 first_name_label = Label(personal_section, text="First Name*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-first_name_label.grid(row=0, column=0, padx=10, pady=10, sticky=  W)
+first_name_label.grid(row=0, column=0, padx=10, pady=5, sticky=  W)
 
 first_name_entry = Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-first_name_entry.grid(row=1, column=0, padx=10, pady=10)
+first_name_entry.grid(row=1, column=0, padx=10, pady=3)
 
 last_name_label = Label(personal_section, text="Last Name*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-last_name_label.grid(row=2, column=0, padx=10, pady=10, sticky=  W)
+last_name_label.grid(row=2, column=0, padx=10, pady=5, sticky=  W)
 
 last_name_entry = Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-last_name_entry.grid(row=3, column=0, padx=10, pady=10)
+last_name_entry.grid(row=3, column=0, padx=10, pady=3)
 
 subject_label = Label(personal_section, text="Subject*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-subject_label.grid(row=4, column=0, padx=10, pady=10, sticky=  W)
+subject_label.grid(row=4, column=0, padx=10, pady=5, sticky=  W)
 
 subject_entry = Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-subject_entry.grid(row=5, column=0, padx=10, pady=10)
+subject_entry.grid(row=5, column=0, padx=10, pady=3)
 
 email_label = Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
-email_label.grid(row=8, column=0, padx=10, pady=10, sticky=  W)
+email_label.grid(row=8, column=0, padx=10, pady=5, sticky=  W)
 
 email_entry = Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
-email_entry.grid(row=9, column=0, padx=10, pady=10)
+email_entry.grid(row=9, column=0, padx=10, pady=3)
 
 save_btn = Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10, command=save_details)
-save_btn.grid(row=12, column=1, padx=10, pady=10)
+save_btn.grid(row=12, column=1, padx=10, pady=3)
+
+#LAB Details
+
+lab_section = LabelFrame(right_frame, text="Lab Details", font=("Arial", 14), fg="#ffffff", bg="#4a148c", width=705, height=790)
+lab_section.grid(row=1, column=0, padx=25, pady=10)
+
+personal_lab_section = LabelFrame(lab_section, font=("Arial", 12), fg="#4a148c", bg="#ffffff", width=500, height=250)
+personal_lab_section.grid(row=13,column=0,padx=10, pady=5)
+
+Lfirst_name_label = Label(personal_lab_section, text="First Name*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+Lfirst_name_label.grid(row=13, column=0, padx=10, pady=5, sticky=  W)
+
+Lfirst_name_entry = Entry(personal_lab_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+Lfirst_name_entry.grid(row=14, column=0, padx=10, pady=3)
+
+Llast_name_label = Label(personal_lab_section, text="Last Name*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+Llast_name_label.grid(row=15, column=0, padx=10, pady=5, sticky=  W)
+
+Llast_name_entry = Entry(personal_lab_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+Llast_name_entry.grid(row=16, column=0, padx=10, pady=3)
+
+Lsubject_label = Label(personal_lab_section, text="Lab Example(Python,OS,etc)*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+Lsubject_label.grid(row=17, column=0, padx=10, pady=5, sticky=  W)
+
+Lsubject_entry = Entry(personal_lab_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+Lsubject_entry.grid(row=18, column=0, padx=10, pady=3)
+
+Lemail_label = Label(personal_lab_section, text="Email*", font=("Arial", 10), fg="#4a148c", bg="#ffffff")
+Lemail_label.grid(row=19, column=0, padx=10, pady=5, sticky=  W)
+
+Lemail_entry = Entry(personal_lab_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff",width=35)
+Lemail_entry.grid(row=20, column=0, padx=10, pady=3)
+
+Lsave_btn = Button(personal_lab_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10, command=Lsave_details)
+Lsave_btn.grid(row=21, column=1, padx=10, pady=3)
 
 list_section = LabelFrame(right_frame, text="Teacher List", font=("Arial", 14), fg="#ffffff", bg="#4a148c", width=550, height=600)
 list_section.grid(row=0, column=1, padx=10, pady=10)
 
+Lecture=Label(list_section, text="Lectures", font=("Arial", 16), fg="#ffffff", bg="#4a148c")
+Lecture.pack(padx=10,pady=5)
+
+tree = ttk.Treeview(list_section, columns=("S.NO", "NAME", "SUBJECT", "EMAIL"), show="headings",height=8 )
+tree.pack(padx=10, pady=5)
+
+tree.column("S.NO", width=25, anchor=CENTER)
+tree.column("NAME", width=100, anchor=CENTER)
+tree.column("SUBJECT", width=100, anchor=CENTER)
+tree.column("EMAIL", width=200, anchor=CENTER)
+
+tree.heading("S.NO", text="S.NO")
+tree.heading("NAME", text="NAME")
+tree.heading("SUBJECT", text="SUBJECT")
+tree.heading("EMAIL", text="EMAIL")
+
 tree_insert_details()
+
+lab_section = LabelFrame(right_frame, text="Teacher List", font=("Arial", 14), fg="#ffffff", bg="#4a148c", width=550, height=600)
+lab_section.grid(row=1, column=1, padx=10, pady=10)
+
+Lab=Label(lab_section, text="LABS", font=("Arial", 16), fg="#ffffff", bg="#4a148c")
+Lab.pack(padx=10,pady=5)
+
+Ltree = ttk.Treeview(lab_section, columns=("S.NO", "NAME", "SUBJECT", "EMAIL"), show="headings",height=8 )
+Ltree.pack(padx=10, pady=5)
+
+Ltree.column("S.NO", width=25, anchor=CENTER)
+Ltree.column("NAME", width=100, anchor=CENTER)
+Ltree.column("SUBJECT", width=100, anchor=CENTER)
+Ltree.column("EMAIL", width=200, anchor=CENTER)
+
+Ltree.heading("S.NO", text="S.NO")
+Ltree.heading("NAME", text="NAME")
+Ltree.heading("SUBJECT", text="SUBJECT")
+Ltree.heading("EMAIL", text="EMAIL")
+
+
+Lab_tree_insert_details()
 
 root.mainloop()

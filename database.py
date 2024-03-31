@@ -16,14 +16,16 @@ c = conn.cursor()
 #     time_slot TEXT )
 # """)
 
-c.execute("""delete from timetable""")
+c.execute(""" DELETE FROM teacher where Lec_Type='lab';""")
+conn.commit()
+c.execute(""" DELETE FROM sqlite_sequence WHERE name='teacher';""")
 conn.commit()
 
-c.execute("""delete from timetable_B""")
-conn.commit()
+# c.execute("""delete from timetable_B""")
+# conn.commit()
 
-c.execute("""delete from timetable_C""")
-conn.commit()
+# c.execute("""delete from timetable_C""")
+# conn.commit()
 
 
 # c.execute("""ALTER TABLE timetable
