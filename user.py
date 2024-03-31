@@ -205,7 +205,7 @@ def fetch_and_display_classes():
     week_labB.grid(row=4,column=1,padx=10, pady=10)
     week_labC=Frame(classes_info_frame,bg="#D1BAFF")
     week_labC.grid(row=4,column=2,padx=10, pady=10)
-
+    #HII
     Lab_Label = Label(classes_info_frame, text="Labs", bg="#D1BAFF",font=("Arial", 16,"bold"))
     Lab_Label.grid(row=3,column=0, padx=5, pady=5)
 
