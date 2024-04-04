@@ -629,7 +629,7 @@ def fill_timetable_B():
                         save_data.append(data)
                     
                     elif (total_free_lecture_count == 4 and total_nonfree_lab_count == 8 and total_nonfree_lecture_count < 18):
-                        for i in formatted_data_A:
+                        for i in formatted_data_B:
                             if i[0] == "lecture" and i[4] < 3 and i[1] != needed_data_A[1] and i[2] != needed_data_A[0]:
                                 data=[i[1],i[2],i[3], day, slot]
                                 i[4] += 1

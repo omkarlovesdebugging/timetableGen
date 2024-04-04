@@ -117,7 +117,7 @@ def Lab_tree_insert_details():
     for item in Ltree.get_children():
         Ltree.delete(item)
     for row in rows:
-        Ltree.insert("", "end", values=(row[0], row[1] + ' ' + row[2], row[3] + " Lab", row[4]))
+        Ltree.insert("", "end", values=(row[0], row[1] + ' ' + row[2], row[3] , row[4]))
 
  
 
