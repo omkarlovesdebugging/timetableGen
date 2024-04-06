@@ -1,10 +1,36 @@
 import subprocess
 from tkinter import *
 from tkinter import ttk
+from tkinter import font
+import sqlite3
 
 
 # Create a root window
 root = Tk()
+
+def loggingin():
+    user=User_entry.get()
+    key=Password_entry.get()
+
+    cursor.execute("Select email,password from teacher")
+    conn.commit()
+    data=cursor.fetchall()
+
+    for i in data:
+        if i[0]==user and i[1]==key:
+            print("Navigating to lecture page...") #Debug Message
+            print("Lecture Page opened")#Debug Message
+            root.destroy()
+            subprocess.run(["python","user.py"])
+            
+def student_page():
+    print("Navigating to lecture page...") #Debug Message
+    print("Lecture Page opened")#Debug Message
+    root.destroy()
+    subprocess.run(["python","student-pov-web\stu-pov-tt.py"])
+
+conn = sqlite3.connect("timetable_generator.db")
+cursor = conn.cursor()
 
 # Set the title and icon of the window
 root.title("Timetable")
@@ -36,29 +62,29 @@ Logo_label.pack(side=TOP,fill=BOTH,expand=TRUE,padx=20  )
 # Create a list of buttons for the sidebar
 buttons = []
 
-def timetable_page():
-    print("Navigating to timetable page...") # Debug Message
-    print("Timetable Page opened") # Debug Message
-    root.destroy()
-    subprocess.run(["python", "timetable_ADITYA.py"])
+# def timetable_page():
+#     print("Navigating to timetable page...") # Debug Message
+#     print("Timetable Page opened") # Debug Message
+#     root.destroy()
+#     subprocess.run(["python", "timetable_ADITYA.py"])
 
-def teacher_section():
-    print("Navigating to teacher_section page...") # Debug Message
-    print("Teacher Section Page opened") # Debug Message
-    root.destroy()
-    subprocess.run(["python", "Teacher_section.py"])
+# def teacher_section():
+#     print("Navigating to teacher_section page...") # Debug Message
+#     print("Teacher Section Page opened") # Debug Message
+#     root.destroy()
+#     subprocess.run(["python", "Teacher_section.py"])
 
-def USER():
-    print("Navigating to user page...") # Debug Message
-    print("User Page opened") # Debug Message
-    root.destroy()
-    subprocess.run(["python", "user.py"])
+# def USER():
+#     print("Navigating to user page...") # Debug Message
+#     print("User Page opened") # Debug Message
+#     root.destroy()
+#     subprocess.run(["python", "user.py"])
 
-def activity():
-    print("Navigating to activity page...") # Debug Message
-    print("Activity Page opened") # Debug Message
-    root.destroy()
-    subprocess.run(["python", "notifications.py"])
+# def activity():
+#     print("Navigating to activity page...") # Debug Message
+#     print("Activity Page opened") # Debug Message
+#     root.destroy()
+#     subprocess.run(["python", "notifications.py"])
 
 # Loop through the menu items and create buttons
 # for item in menu_items:
@@ -112,22 +138,22 @@ W2.pack(padx=50,pady=5,anchor=W)
 Username=Label(Login_frame,text="Username",font=("Times",14),bg="#EEE6FF")
 Username.pack(padx=50,pady=10,anchor=W)
 
-User_entry = Entry(Login_frame, font=("Arial", 17), fg="#190B3E", bg="#ffffff",width=330)
+User_entry = Entry(Login_frame, font=("Arial", 17), fg="#868686", bg="#ffffff",width=330)
 User_entry.pack( padx=50,pady=10,anchor=W)
 
 Password=Label(Login_frame,text="Password",font=("Times",14),bg="#EEE6FF")
 Password.pack(padx=50,pady=10,anchor=W)
 
-Password_entry = Entry(Login_frame, font=("Arial", 17), fg="#190B3E", bg="#ffffff",width=330)
+Password_entry = Entry(Login_frame, font=("Arial", 17), fg="#868686", bg="#ffffff",width=330)
 Password_entry.pack( padx=50, pady=10,anchor=W)
 
-Log_in = Button(Login_frame, text="LOG IN", font=("Times", 16), fg="#ffffff", bg="#28A5FF",width=10)
+Log_in = Button(Login_frame, text="LOG IN", font=("Times", 16), fg="#ffffff", bg="#28A5FF",width=10,command=loggingin)
 Log_in.pack( padx=50, pady=25,anchor=W)
 
 student=Label(Login_frame,text = "Are you a student? then                   ",font=("Times",12),bg="#EEE6FF",fg="black")
 student.pack(padx=50,pady=10,anchor=W)
 
-button = Button(Login_frame, text="Click Here", relief=FLAT, borderwidth=0, bg="#EEE6FF",font=("Times",12),fg="#28A5FF")
+button = Button(Login_frame, text="Click Here", relief=FLAT, borderwidth=0, bg="#EEE6FF",font=("Times",12),fg="#28A5FF",command=student_page)
 button.place(in_=student,anchor=E,relx=1.0,rely=0.5)
 # Function to fetch and display notifications
 

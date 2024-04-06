@@ -18,8 +18,10 @@ c = conn.cursor()
 
 # c.execute(""" DELETE FROM notifications;""")
 # conn.commit()
-c.execute(""" DELETE FROM teacher where Lec_Type='lab';""")
-conn.commit()
+# c.execute(""" DELETE FROM teacher;""")
+# conn.commit()
+# c.execute(""" DELETE FROM teacher where Lec_Type='lab';""")
+# conn.commit()
 c.execute(""" DELETE FROM sqlite_sequence WHERE name='teacher';""")
 conn.commit()
 
@@ -32,18 +34,14 @@ conn.commit()
 
 # c.execute("""ALTER TABLE timetable
 # ADD COLUMN day TEXT""")
-# c.execute("""ALTER TABLE timetable
-# ADD COLUMN time_slot TEXT""")
+# c.execute("""ALTER TABLE teacher
+# ADD COLUMN password TEXT""")
+
+# c.execute("INSERT INTO teacher (password) VALUES ('Jadhav') where first_name = 'Rakhi'")
+# conn.commit()
 
 print(c.fetchall())
 conn.commit()
 
 print('Connnection successful')
 conn.close()
-
-
-
-
-
-
-

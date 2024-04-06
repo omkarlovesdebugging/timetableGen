@@ -22,7 +22,6 @@ sidebar.pack(side=LEFT, fill=Y)
 # Create a list of menu items for the sidebar
 menu_items = [
     ("TIMETABLE", PhotoImage(file="Images/home_icon.png").subsample(2)),
-    ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
 ]
 
 # Create a list of buttons for the sidebar
@@ -42,15 +41,15 @@ def timetable_page() :
     subprocess.run(["python","student-pov-web/stu-pov-tt.py"])
 
 
-def activity() :
-    print("Navigating to activity page...") #Debug Message
-    print("activity Page opened")#Debug Message
-    root.destroy()
-    subprocess.run(["python","student-pov-web/stu-pov-notifications.py"])
 
 
-
-def load_timetable():
+def load_timetableA():
+    global calendar
+    if (calendar):
+        calendar.destroy() 
+        
+    calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
+    calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
     list = []
     
     # if (len(subjects) < 5 and len(subjects) > 0):
@@ -74,20 +73,20 @@ def load_timetable():
     # Loop through the days and create labels
     for i,day in enumerate(days):
         # Create a label for the day
-        day_label = Label(calendar, text=day, font=("Arial", 12, "bold"), bg="#C1BBEB", fg="#3a3a3a")
-        day_label.grid(row=0, column=days.index(day), padx=5, pady=5)
+        day_label = Label(calendar, text=day, font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#3a3a3a")
+        day_label.grid(row=0, column=days.index(day), padx=50, pady=0)
 
         # Create a frame for the time slots
         time_frame = Frame(calendar, bg="#C1BBEB")
-        time_frame.grid(row=1, column=days.index(day), padx=5, pady=5)
+        time_frame.grid(row=1, column=days.index(day), padx=10, pady=5)
 
         # Create a list of time slots for the day
-        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-3:30"]
+        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
 
         # Loop through the time slots and create labels
         for j,slot in enumerate(time_slots):
             # Create a label for the time slot
-            slot_label = Label(time_frame, text=slot, font=("Arial", 8), bg="#C1BBEB", fg="#3a3a3a")
+            slot_label = Label(time_frame, text=slot, font=("Arial", 6), bg="#C1BBEB", fg="#3a3a3a")
             
             # Pack the label to the time frame
             slot_label.pack(side=TOP, anchor=W)
@@ -96,9 +95,173 @@ def load_timetable():
             if slot != "BREAK":
 
                 # Create a frame for the subject details
-                subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=10, highlightbackground="#A098AE", highlightthickness=2)
+                subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=6, highlightbackground="#A098AE", highlightthickness=2)
                 subject_frame.pack_propagate(1)
-                subject_frame.pack(side=TOP, fill=X, padx=10, pady=10)
+                subject_frame.pack(side=TOP, fill=X, padx=6, pady=6)
+
+                if subjects != []:
+                    if ((subject_index >= len(subjects)) and subjects != []):
+                        subject_index = random.randint(0, len(subjects) - 1)
+                    # Get the current subject from the list
+                    subject = subjects[subject_index]
+                    
+                #     # Increment the subject index
+                    subject_index += 1
+                    
+                    # Create a label for the subject name
+                
+                    subject_name = Label(subject_frame, text=list[index][0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
+                    subject_name.pack(side=TOP, anchor=W, padx=0, pady=0)
+
+                    # Create a label for the teacher name
+                    teacher_name = Label(subject_frame, text=list[index][1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
+                    
+                    # Create a label for the room number
+                    room_number = Label(subject_frame, text=list[index][2], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
+                    index=index+1
+
+        # subject_index = 0
+        if ((subject_index >= len(subjects)) and subjects != []):
+            subject_index = random.randint(0, len(subjects) - 1)
+def load_timetableB():
+    global calendar
+    if (calendar):
+        calendar.destroy() 
+        
+    calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
+    calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
+    list = []
+    
+    # if (len(subjects) < 5 and len(subjects) > 0):
+    #     msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+    #     return ValueError
+
+    # Create a list of days for the calendar
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    
+    # subjects = []
+    index=0
+    # Create a variable to keep track of the current subject index
+    subject_index = 0
+
+
+    cursor.execute("select * from timetable_B")
+    rows = cursor.fetchall()
+    for row in rows:
+        list.append(row)
+    print(list)
+    # Loop through the days and create labels
+    for i,day in enumerate(days):
+        # Create a label for the day
+        day_label = Label(calendar, text=day, font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#3a3a3a")
+        day_label.grid(row=0, column=days.index(day), padx=50, pady=0)
+
+        # Create a frame for the time slots
+        time_frame = Frame(calendar, bg="#C1BBEB")
+        time_frame.grid(row=1, column=days.index(day), padx=10, pady=5)
+
+        # Create a list of time slots for the day
+        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
+
+        # Loop through the time slots and create labels
+        for j,slot in enumerate(time_slots):
+            # Create a label for the time slot
+            slot_label = Label(time_frame, text=slot, font=("Arial", 6), bg="#C1BBEB", fg="#3a3a3a")
+            
+            # Pack the label to the time frame
+            slot_label.pack(side=TOP, anchor=W)
+            
+            # Check if the time slot is not a break
+            if slot != "BREAK":
+
+                # Create a frame for the subject details
+                subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=6, highlightbackground="#A098AE", highlightthickness=2)
+                subject_frame.pack_propagate(1)
+                subject_frame.pack(side=TOP, fill=X, padx=6, pady=6)
+
+                if subjects != []:
+                    if ((subject_index >= len(subjects)) and subjects != []):
+                        subject_index = random.randint(0, len(subjects) - 1)
+                    # Get the current subject from the list
+                    subject = subjects[subject_index]
+                    
+                #     # Increment the subject index
+                    subject_index += 1
+                    
+                    # Create a label for the subject name
+                
+                    subject_name = Label(subject_frame, text=list[index][0], font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#4a148c")
+                    subject_name.pack(side=TOP, anchor=W, padx=0, pady=0)
+
+                    # Create a label for the teacher name
+                    teacher_name = Label(subject_frame, text=list[index][1], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    teacher_name.pack(side=TOP, anchor=W, padx=0, pady=0)
+                    
+                    # Create a label for the room number
+                    room_number = Label(subject_frame, text=list[index][2], font=("Arial", 8), bg="#C1BBEB", fg="#4a148c")
+                    room_number.pack(side=TOP, anchor=W, padx=0, pady=0)
+                    index=index+1
+
+        # subject_index = 0
+        if ((subject_index >= len(subjects)) and subjects != []):
+            subject_index = random.randint(0, len(subjects) - 1)
+def load_timetableC():
+    global calendar
+    if (calendar):
+        calendar.destroy() 
+        
+    calendar = Frame(content, bg="#C1BBEB", width=1000, height=500)
+    calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
+    list = []
+    
+    # if (len(subjects) < 5 and len(subjects) > 0):
+    #     msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
+    #     return ValueError
+
+    # Create a list of days for the calendar
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    
+    # subjects = []
+    index=0
+    # Create a variable to keep track of the current subject index
+    subject_index = 0
+
+
+    cursor.execute("select * from timetable_C")
+    rows = cursor.fetchall()
+    for row in rows:
+        list.append(row)
+    print(list)
+    # Loop through the days and create labels
+    for i,day in enumerate(days):
+        # Create a label for the day
+        day_label = Label(calendar, text=day, font=("Arial", 8, "bold"), bg="#C1BBEB", fg="#3a3a3a")
+        day_label.grid(row=0, column=days.index(day), padx=50, pady=0)
+
+        # Create a frame for the time slots
+        time_frame = Frame(calendar, bg="#C1BBEB")
+        time_frame.grid(row=1, column=days.index(day), padx=10, pady=5)
+
+        # Create a list of time slots for the day
+        time_slots = ["8:30-9:30", "9:30-10:30", "10:30-11:30", "11:30-12:30", "BREAK", "1:30-2:30", "2:30-3:30"]
+
+        # Loop through the time slots and create labels
+        for j,slot in enumerate(time_slots):
+            # Create a label for the time slot
+            slot_label = Label(time_frame, text=slot, font=("Arial", 6), bg="#C1BBEB", fg="#3a3a3a")
+            
+            # Pack the label to the time frame
+            slot_label.pack(side=TOP, anchor=W)
+            
+            # Check if the time slot is not a break
+            if slot != "BREAK":
+
+                # Create a frame for the subject details
+                subject_frame = Frame(time_frame, bg="#C1BBEB", width=80, height=6, highlightbackground="#A098AE", highlightthickness=2)
+                subject_frame.pack_propagate(1)
+                subject_frame.pack(side=TOP, fill=X, padx=6, pady=6)
 
                 if subjects != []:
                     if ((subject_index >= len(subjects)) and subjects != []):
@@ -128,27 +291,7 @@ def load_timetable():
             subject_index = random.randint(0, len(subjects) - 1)
 
     
-def fill_timetable():
-    
-    cursor.execute("SELECT * FROM teacher")
-    data = cursor.fetchall()
 
-    formatted_data = []
-
-    for i in data:
-        teacher_fullname = i[1] + " " + i[2]
-        subject_fullname = i[3]
-
-        formatted_data.append((teacher_fullname, subject_fullname))
-    
-    print(formatted_data)
-
-    load_timetable(subjects=formatted_data)
-    
-    if (len(formatted_data) == 0):
-        msg = messagebox.showerror("ERROR","You must have atleast 5 teachers to generate a valid TT") 
-        return ValueError
-    # load_timetable(subjects=subjects)
 
 
 # Loop through the menu items and create buttons
@@ -158,9 +301,7 @@ for item in menu_items:
         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w",command=timetable_page)
         button.pack(anchor="w") 
     
-    elif (item[0]=="LATEST ACTIVITY"):
-        button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w",command=activity)
-        button.pack(anchor="w") 
+   
     # Add the button to the list
     buttons.append(button)
     # Pack the button to the sidebar
@@ -180,18 +321,74 @@ user_icon = Label(topbar, image=user_icon_image, bg="#C1BBEB")
 user_icon.pack(side=RIGHT, padx=10, pady=10)
 
 # Create a label for the user name
-user_name = Label(topbar, text="Vineeta M.", font=("Arial", 16), bg="#C1BBEB", fg="#4a148c")
+user_name = Label(topbar, text="Student", font=("Arial", 16), bg="#C1BBEB", fg="#4a148c")
 user_name.pack(side=RIGHT, pady=10)
 
 # Create a main content frame
 content = Frame(root, bg="#C1BBEB", width=600, height=550)
 content.pack(side=TOP, fill=BOTH, expand=True)
 
+class_1_button = Button(content, text="D10A", font=("Arial", 8, "bold"), bg="#4a148c", fg="white", bd=0, padx=10, pady=5,command=load_timetableA)
+class_1_button.pack(side=TOP, padx=25, pady=5, anchor="w")
+
+class_2_button = Button(content, text="D10B", font=("Arial", 8, "bold"), bg="#4a148c", fg="white", bd=0, padx=10, pady=5,command=load_timetableB)
+class_2_button.place(x=class_1_button.winfo_x() + class_1_button.winfo_reqwidth() + 41, y=class_1_button.winfo_y()+5)
+
+class_3_button = Button(content, text="D10C", font=("Arial", 8, "bold"), bg="#4a148c", fg="white", bd=0, padx=10, pady=5,command=load_timetableC)
+class_3_button.place(x=class_2_button.winfo_x() + class_2_button.winfo_reqwidth() + 115, y=class_2_button.winfo_y()+5)
+
+# Binding click events to buttons
+def show_focusA(event):
+    class_1_button.config(
+        bg='#C1BBEB',
+        fg="#4a148c",
+        highlightbackground="#4a148c"
+    )
+    class_2_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_3_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+def show_focusB(event):
+    class_2_button.config(
+        bg='#C1BBEB',
+        fg="#4a148c"
+    )
+    class_1_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_3_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+def show_focusC(event):
+    class_3_button.config(
+        bg='#C1BBEB',
+        fg="#4a148c"
+    )
+    class_2_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+    class_1_button.config(
+        bg='#4a148c',
+        fg="white"
+    )
+class_1_button.bind('<Button>',show_focusA)
+class_2_button.bind('<Button>',show_focusB)
+class_3_button.bind('<Button>',show_focusC)
+
+show_focusA(event=None)
+
 # Create a calendar frame
 calendar = Frame(content, bg="#C1BBEB", width=550, height=500)
 calendar.pack(side=LEFT, fill=BOTH, expand=True, padx=20, pady=20)
 
-load_timetable()
+load_timetableA()
 
 # Create a generate button
 # generate_button = Button(content, text="GET", font=("Arial", 20, "bold"), bg="#4a148c", fg="white", bd=0, width=10, height=10, command=fill_timetable)
