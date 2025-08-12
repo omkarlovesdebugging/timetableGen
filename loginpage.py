@@ -50,60 +50,6 @@ sidebar.pack(side=LEFT, fill=Y)
 Logo_label=Label(sidebar,image=Brand_logo,bg='#190B3E')
 Logo_label.pack(side=TOP,fill=BOTH,expand=TRUE,padx=20  )
 
-# # Create a list of menu items for the sidebar
-# menu_items = [
-#     ("TIMETABLE", PhotoImage(file="Images/home_icon(1).png").subsample(2)),
-#     ("LECTURES", PhotoImage(file="Images/lecturer_icon(1).png").subsample(2)),
-#     ("TEACHERS", PhotoImage(file="Images/teacher_icon(1).png").subsample(2)),
-#     ("USER", PhotoImage(file="Images/user_icon.png").subsample(2)),
-#     ("LATEST ACTIVITY", PhotoImage(file="Images/activity_icon(1).png").subsample(2))
-# ]
-
-# Create a list of buttons for the sidebar
-buttons = []
-
-# def timetable_page():
-#     print("Navigating to timetable page...") # Debug Message
-#     print("Timetable Page opened") # Debug Message
-#     root.destroy()
-#     subprocess.run(["python", "timetable_ADITYA.py"])
-
-# def teacher_section():
-#     print("Navigating to teacher_section page...") # Debug Message
-#     print("Teacher Section Page opened") # Debug Message
-#     root.destroy()
-#     subprocess.run(["python", "Teacher_section.py"])
-
-# def USER():
-#     print("Navigating to user page...") # Debug Message
-#     print("User Page opened") # Debug Message
-#     root.destroy()
-#     subprocess.run(["python", "user.py"])
-
-# def activity():
-#     print("Navigating to activity page...") # Debug Message
-#     print("Activity Page opened") # Debug Message
-#     root.destroy()
-#     subprocess.run(["python", "notifications.py"])
-
-# Loop through the menu items and create buttons
-# for item in menu_items:
-#     if (item[0] == "USER"):
-#         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="#4a148c", bg="white", bd=0, padx=20, pady=10, anchor="w", command=USER)
-#         button.pack(anchor="w") 
-#     elif (item[0] == "TIMETABLE"):
-#         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=timetable_page)
-#         button.pack(anchor="w") 
-#     elif (item[0] == "LATEST ACTIVITY"):
-#         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=activity)
-#         button.pack(anchor="w") 
-#     elif (item[0] == "TEACHERS"):
-#         button = Button(sidebar, text=item[0], image=item[1], compound=LEFT, fg="white", bg="#4a148c", bd=0, padx=20, pady=10, anchor="w", command=teacher_section)
-#         button.pack(anchor="w") 
-# #     # Add the button to the list
-#     buttons.append(button)
-#     # Pack the button to the sidebar
-#     button.pack(fill=X)
 
 # Create a top bar frame
 Name_of_faculty = "Abhay Kshirsagar"
@@ -123,8 +69,7 @@ Pad_frame=Frame(info_frame,bg="#D1BAFF",height=100,width=600)
 Pad_frame.pack(side=TOP,fill=X)
 Login_frame=Frame(info_frame,bg="#EEE6FF",height=530,width=600)
 Login_frame.pack(side=BOTTOM,pady=50,padx=120)
-# Login_frame.grid_rowconfigure(0, weight=1)
-# Login_frame.grid_columnconfigure(0, weight=1)
+
 
 Welcome=Label(Login_frame,text="Welcome To Planify",font=("Times",14),bg="#EEE6FF",width=390,anchor=W)
 Welcome.pack(padx=50,pady=15,anchor=W)

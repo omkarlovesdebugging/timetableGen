@@ -144,23 +144,6 @@ user_icon.pack(side=RIGHT, padx=10, pady=10)
 user_name = Label(topbar, text="Vineeta M.", font=("Arial", 16), bg="#C1BBEB", fg="#4a148c")
 user_name.pack(side=RIGHT, pady=10)
 
-# Creating the sidebar icons
-# timetable_icon =  PhotoImage(file='Images/Timetable.png')
-# timetable_icon = timetable_icon.subsample(2, 2)
-
-# Creating the sidebar buttons
-# timetable_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
-# timetable_btn.place(x=50, y=50)
-
-# instructions_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
-# instructions_btn.place(x=50, y=150)
-
-# teachers_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0, relief= SUNKEN)
-# teachers_btn.place(x=50, y=250)
-
-# activity_btn =  Button(sidebar, image=timetable_icon, bg="#4a148c", bd=0)
-# activity_btn.place(x=50, y=350)
-
 # Creating the right frame
 right_frame =  Frame(root, width=600, height=550, bg="#C1BBEB")
 right_frame.pack(side= RIGHT, fill= BOTH, expand=True)
@@ -192,31 +175,6 @@ subject_label.grid(row=2, column=0, padx=10, pady=10, sticky= W)
 subject_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
 subject_entry.grid(row=3, column=0, padx=10, pady=10)
 
-# subject_code_label =  Label(personal_section, text="Subject Code*", font=("Arial", 10), fg="#4a148c",
-#                               bg="#ffffff")
-# subject_code_label.grid(row=4, column=0, padx=10, pady=10, sticky= W)
-
-# subject_code_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
-# subject_code_entry.grid(row=5, column=0, padx=10, pady=10)
-
-# email_label =  Label(personal_section, text="Email*", font=("Arial", 10), fg="#4a148c",
-#                        bg="#ffffff")
-# email_label.grid(row=6, column=0, padx=10, pady=10, sticky= W)
-
-# email_entry =  Entry(personal_section, font=("Arial", 16), fg="#4a148c", bg="#ffffff", width=35)
-# email_entry.grid(row=7, column=0, padx=10, pady=10)
-
-
-# room_no_label =  Label(personal_section, text="Room No*", font=("Arial", 10), fg="#4a148c",
-#                          bg="#ffffff")
-# room_no_label.grid(row=0, column=1, padx=10, pady=10, sticky= W)
-
-# # Create a list of room numbers
-# room_numbers = ["Room 511", "Room 512", "Room 513", "Room 514"]
-
-# # Create a Combobox widget for room selection
-# combobox_room = ttk.Combobox(personal_section, values=room_numbers, font=("Arial", 16), width=33)
-# combobox_room.grid(row=1, column=1, padx=10, pady=10)
 
 # Creating the save button
 save_btn =  Button(personal_section, text="Save", font=("Arial", 12), fg="#ffffff", bg="#4a148c", width=10,command= save_details)
